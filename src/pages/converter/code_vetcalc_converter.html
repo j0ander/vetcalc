@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>VetCalc - Veterinary Converter</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Source+Sans+3:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed-variant": "#544600",
+                        "on-primary-fixed-variant": "#005312",
+                        "on-surface-variant": "#40493d",
+                        "tertiary": "#705d00",
+                        "surface-container-low": "#e9f6fd",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed-variant": "#005313",
+                        "on-tertiary-container": "#4c3e00",
+                        "surface": "#f4faff",
+                        "surface-container-highest": "#d7e4ec",
+                        "surface-container-high": "#ddeaf2",
+                        "inverse-surface": "#263238",
+                        "secondary": "#006e1c",
+                        "primary-fixed-dim": "#88d982",
+                        "on-error-container": "#93000a",
+                        "on-primary": "#ffffff",
+                        "on-secondary-container": "#00731e",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed": "#221b00",
+                        "surface-dim": "#cfdce4",
+                        "surface-tint": "#1b6d24",
+                        "on-background": "#111d23",
+                        "outline": "#707a6c",
+                        "secondary-fixed-dim": "#78dc77",
+                        "inverse-primary": "#88d982",
+                        "on-primary-container": "#cbffc2",
+                        "primary": "#0d631b",
+                        "outline-variant": "#bfcaba",
+                        "tertiary-container": "#c9a900",
+                        "tertiary-fixed": "#ffe16d",
+                        "surface-bright": "#f4faff",
+                        "on-error": "#ffffff",
+                        "on-primary-fixed": "#002204",
+                        "secondary-container": "#91f78e",
+                        "surface-container": "#e3f0f8",
+                        "surface-variant": "#d7e4ec",
+                        "inverse-on-surface": "#e6f3fb",
+                        "on-secondary-fixed": "#002204",
+                        "on-surface": "#111d23",
+                        "tertiary-fixed-dim": "#e9c400",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-container": "#2e7d32",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed": "#94f990",
+                        "background": "#f4faff",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed": "#a3f69c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "touch-target-min": "48px",
+                        "base": "8px",
+                        "stack-lg": "24px",
+                        "gutter": "12px",
+                        "container-padding": "16px",
+                        "stack-sm": "4px",
+                        "stack-md": "16px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "body-md": ["Source Sans 3"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-lg": ["Source Sans 3"],
+                        "headline-md": ["Inter"],
+                        "headline-xl": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["22px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "body-lg": ["18px", {"lineHeight": "26px", "fontWeight": "400"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-xl": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #f4faff;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .converter-card {
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .tab-active {
+            border-bottom: 3px solid #0d631b;
+            color: #0d631b;
+        }
+        .custom-shadow {
+            box-shadow: 0px 2px 8px rgba(38, 50, 56, 0.08);
+        }
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md min-h-screen pb-24">
+<!-- Top Navigation Header -->
+<header class="w-full top-0 sticky bg-surface z-50 shadow-sm flex justify-between items-center px-container-padding h-touch-target-min">
+<div class="flex items-center gap-2">
+<button class="p-2 -ml-2 rounded-full hover:bg-surface-container-high transition-colors active:scale-95">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<span class="font-headline-md text-headline-md font-bold text-primary">Converter</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant">history</span>
+<span class="material-symbols-outlined text-primary">account_circle</span>
+</div>
+</header>
+<main class="max-w-md mx-auto px-container-padding pt-6 space-y-stack-lg">
+<!-- Segmented Tab Selector -->
+<div class="bg-surface-container rounded-xl p-1 flex justify-between items-center">
+<button class="flex-1 py-3 text-center rounded-lg transition-all font-label-md text-label-md bg-surface text-primary shadow-sm" id="tab-weight" onclick="switchMode('weight')">
+                Weight
+            </button>
+<button class="flex-1 py-3 text-center rounded-lg transition-all font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high" id="tab-temp" onclick="switchMode('temp')">
+                Temperature
+            </button>
+<button class="flex-1 py-3 text-center rounded-lg transition-all font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high" id="tab-volume" onclick="switchMode('volume')">
+                Volume
+            </button>
+</div>
+<!-- Conversion Canvas -->
+<div class="space-y-stack-md">
+<div class="bg-surface-container-lowest rounded-xl p-container-padding custom-shadow border border-surface-variant/50" id="converter-container">
+<div class="flex flex-col space-y-stack-lg">
+<!-- Input Section 1 -->
+<div class="space-y-stack-sm">
+<label class="font-label-sm text-label-sm text-on-surface-variant ml-1" id="label-left">Pounds (lb)</label>
+<div class="relative flex items-center">
+<input class="w-full h-touch-target-min bg-surface-container-low border-2 border-transparent focus:border-primary focus:ring-0 rounded-lg px-4 font-headline-xl text-headline-xl text-primary transition-all" id="input-left" oninput="convert('left')" placeholder="0.0" type="number"/>
+<span class="absolute right-4 font-label-md text-label-md text-on-surface-variant pointer-events-none" id="unit-left">lb</span>
+</div>
+</div>
+<!-- Swap Icon -->
+<div class="flex justify-center -my-3 z-10">
+<button class="bg-primary text-on-primary p-2 rounded-full shadow-lg active:rotate-180 transition-transform duration-300" onclick="swapUnits()">
+<span class="material-symbols-outlined">sync_alt</span>
+</button>
+</div>
+<!-- Input Section 2 -->
+<div class="space-y-stack-sm">
+<label class="font-label-sm text-label-sm text-on-surface-variant ml-1" id="label-right">Kilograms (kg)</label>
+<div class="relative flex items-center">
+<input class="w-full h-touch-target-min bg-surface-container-low border-2 border-transparent focus:border-primary focus:ring-0 rounded-lg px-4 font-headline-xl text-headline-xl text-primary transition-all" id="input-right" oninput="convert('right')" placeholder="0.0" type="number"/>
+<span class="absolute right-4 font-label-md text-label-md text-on-surface-variant pointer-events-none" id="unit-right">kg</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick References / Common Values -->
+<div class="grid grid-cols-1 gap-gutter">
+<div class="bg-surface-container-high/30 p-container-padding rounded-xl border-l-4 border-primary">
+<p class="font-label-md text-label-md text-primary mb-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">info</span>
+                        Clinical Reference
+                    </p>
+<p class="font-body-md text-body-md text-on-surface-variant" id="reference-text">
+                        For rapid dose calculations, remember that 1 kg is approximately 2.2 lbs.
+                    </p>
+</div>
+</div>
+</div>
+<!-- Action Grid (Bento Style) -->
+<div class="grid grid-cols-2 gap-gutter">
+<div class="col-span-2 bg-secondary-container/20 p-4 rounded-xl border border-secondary/20 flex items-center justify-between">
+<div>
+<p class="font-label-sm text-label-sm text-secondary">Advanced Mode</p>
+<p class="font-headline-md text-headline-md text-on-surface">Fluid Rates</p>
+</div>
+<button class="bg-secondary text-on-secondary px-4 py-2 rounded-lg font-label-md text-label-md active:scale-95 transition-transform">
+                    Calculate
+                </button>
+</div>
+<div class="bg-surface p-4 rounded-xl custom-shadow border border-surface-variant/50 flex flex-col justify-between h-32">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">medical_services</span>
+<p class="font-label-md text-label-md font-bold">Dosage Tools</p>
+</div>
+<div class="bg-surface p-4 rounded-xl custom-shadow border border-surface-variant/50 flex flex-col justify-between h-32">
+<span class="material-symbols-outlined text-tertiary">star</span>
+<p class="font-label-md text-label-md font-bold">Saved Conv.</p>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Shell -->
+<nav class="fixed bottom-0 left-0 right-0 flex justify-around items-center px-4 pb-safe bg-surface shadow-[0px_-2px_8px_rgba(38,50,56,0.08)] h-[64px] z-50">
+<button class="flex flex-col items-center justify-center text-on-surface-variant pt-2 flex-1">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant pt-2 flex-1">
+<span class="material-symbols-outlined">pets</span>
+<span class="font-label-sm text-label-sm">Patients</span>
+</button>
+<button class="flex flex-col items-center justify-center text-primary font-bold border-t-2 border-primary pt-2 flex-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">calculate</span>
+<span class="font-label-sm text-label-sm">Convert</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant pt-2 flex-1">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-label-sm text-label-sm">Library</span>
+</button>
+</nav>
+<script>
+        let currentMode = 'weight'; // weight, temp, volume
+        const modes = {
+            weight: {
+                left: { label: 'Pounds', unit: 'lb' },
+                right: { label: 'Kilograms', unit: 'kg' },
+                ref: 'For rapid dose calculations, remember that 1 kg is approximately 2.2 lbs.',
+                convert: (val, direction) => direction === 'left' ? val / 2.20462 : val * 2.20462
+            },
+            temp: {
+                left: { label: 'Fahrenheit', unit: '°F' },
+                right: { label: 'Celsius', unit: '°C' },
+                ref: 'Normal canine/feline temperature ranges from 101.0°F to 102.5°F (38.3°C to 39.2°C).',
+                convert: (val, direction) => direction === 'left' ? (val - 32) * 5/9 : (val * 9/5) + 32
+            },
+            volume: {
+                left: { label: 'Fluid Ounces', unit: 'fl oz' },
+                right: { label: 'Milliliters', unit: 'mL' },
+                ref: 'Standard measurement: 1 fl oz is approximately 29.57 mL (commonly rounded to 30 mL in clinic).',
+                convert: (val, direction) => direction === 'left' ? val * 29.5735 : val / 29.5735
+            }
+        };
+
+        function switchMode(mode) {
+            currentMode = mode;
+            
+            // Update tabs
+            ['weight', 'temp', 'volume'].forEach(m => {
+                const btn = document.getElementById(`tab-${m}`);
+                if (m === mode) {
+                    btn.classList.add('bg-surface', 'text-primary', 'shadow-sm');
+                    btn.classList.remove('text-on-surface-variant', 'hover:bg-surface-container-high');
+                } else {
+                    btn.classList.remove('bg-surface', 'text-primary', 'shadow-sm');
+                    btn.classList.add('text-on-surface-variant', 'hover:bg-surface-container-high');
+                }
+            });
+
+            // Update UI strings
+            document.getElementById('label-left').innerText = `${modes[mode].left.label} (${modes[mode].left.unit})`;
+            document.getElementById('unit-left').innerText = modes[mode].left.unit;
+            document.getElementById('label-right').innerText = `${modes[mode].right.label} (${modes[mode].right.unit})`;
+            document.getElementById('unit-right').innerText = modes[mode].right.unit;
+            document.getElementById('reference-text').innerText = modes[mode].ref;
+
+            // Clear inputs
+            document.getElementById('input-left').value = '';
+            document.getElementById('input-right').value = '';
+        }
+
+        function convert(direction) {
+            const inputLeft = document.getElementById('input-left');
+            const inputRight = document.getElementById('input-right');
+            
+            if (direction === 'left') {
+                const val = parseFloat(inputLeft.value);
+                if (!isNaN(val)) {
+                    inputRight.value = modes[currentMode].convert(val, 'left').toFixed(2);
+                } else {
+                    inputRight.value = '';
+                }
+            } else {
+                const val = parseFloat(inputRight.value);
+                if (!isNaN(val)) {
+                    inputLeft.value = modes[currentMode].convert(val, 'right').toFixed(2);
+                } else {
+                    inputLeft.value = '';
+                }
+            }
+        }
+
+        function swapUnits() {
+            // Functional swap logic for current mode could be added here
+            // For now, it serves as a UI reset and interaction point
+            const leftVal = document.getElementById('input-left').value;
+            const rightVal = document.getElementById('input-right').value;
+            document.getElementById('input-left').value = rightVal;
+            document.getElementById('input-right').value = leftVal;
+            
+            // Re-trigger conversion based on new values
+            convert('left');
+        }
+    </script>
+</body></html>

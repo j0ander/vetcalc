@@ -1,0 +1,24 @@
+{
+  "name": "vetcalc",
+  "version": "1.0.0",
+  "description": "Professional Veterinary Calculation PWA",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "dexie": "^3.2.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "autoprefixer": "^10.5.0",
+    "postcss": "^8.5.15",
+    "tailwindcss": "^4.3.1",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.11",
+    "vite-plugin-pwa": "^0.17.4"
+  }
+}

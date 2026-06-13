@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Source+Sans+3:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      background: #0d631b;
+      cursor: pointer;
+      border-radius: 50%;
+      border: 2px solid #ffffff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 24px;
+      height: 24px;
+      background: #0d631b;
+      cursor: pointer;
+      border-radius: 50%;
+      border: 2px solid #ffffff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f4faff;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cfdce4;
+      border-radius: 10px;
+    }
+  </style>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-tertiary-fixed-variant": "#544600",
+            "on-primary-fixed-variant": "#005312",
+            "on-surface-variant": "#40493d",
+            "tertiary": "#705d00",
+            "surface-container-low": "#e9f6fd",
+            "error": "#ba1a1a",
+            "on-secondary-fixed-variant": "#005313",
+            "on-tertiary-container": "#4c3e00",
+            "surface": "#f4faff",
+            "surface-container-highest": "#d7e4ec",
+            "surface-container-high": "#ddeaf2",
+            "inverse-surface": "#263238",
+            "secondary": "#006e1c",
+            "primary-fixed-dim": "#88d982",
+            "on-error-container": "#93000a",
+            "on-primary": "#ffffff",
+            "on-secondary-container": "#00731e",
+            "on-tertiary": "#ffffff",
+            "on-tertiary-fixed": "#221b00",
+            "surface-dim": "#cfdce4",
+            "surface-tint": "#1b6d24",
+            "on-background": "#111d23",
+            "outline": "#707a6c",
+            "secondary-fixed-dim": "#78dc77",
+            "inverse-primary": "#88d982",
+            "on-primary-container": "#cbffc2",
+            "primary": "#0d631b",
+            "outline-variant": "#bfcaba",
+            "tertiary-container": "#c9a900",
+            "tertiary-fixed": "#ffe16d",
+            "surface-bright": "#f4faff",
+            "on-error": "#ffffff",
+            "on-primary-fixed": "#002204",
+            "secondary-container": "#91f78e",
+            "surface-container": "#e3f0f8",
+            "surface-variant": "#d7e4ec",
+            "inverse-on-surface": "#e6f3fb",
+            "on-secondary-fixed": "#002204",
+            "on-surface": "#111d23",
+            "tertiary-fixed-dim": "#e9c400",
+            "surface-container-lowest": "#ffffff",
+            "primary-container": "#2e7d32",
+            "error-container": "#ffdad6",
+            "secondary-fixed": "#94f990",
+            "background": "#f4faff",
+            "on-secondary": "#ffffff",
+            "primary-fixed": "#a3f69c"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "touch-target-min": "48px",
+            "base": "8px",
+            "stack-lg": "24px",
+            "gutter": "12px",
+            "container-padding": "16px",
+            "stack-sm": "4px",
+            "stack-md": "16px"
+          },
+          "fontFamily": {
+            "label-sm": ["Inter"],
+            "body-md": ["Source Sans 3"],
+            "headline-lg-mobile": ["Inter"],
+            "headline-lg": ["Inter"],
+            "label-md": ["Inter"],
+            "body-lg": ["Source Sans 3"],
+            "headline-md": ["Inter"],
+            "headline-xl": ["Inter"]
+          },
+          "fontSize": {
+            "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+            "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+            "headline-lg-mobile": ["22px", {"lineHeight": "28px", "fontWeight": "600"}],
+            "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+            "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+            "body-lg": ["18px", {"lineHeight": "26px", "fontWeight": "400"}],
+            "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+            "headline-xl": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md min-h-screen pb-24">
+<!-- Top App Bar -->
+<header class="bg-surface w-full top-0 sticky shadow-sm z-50 flex justify-between items-center px-container-padding h-touch-target-min">
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<span class="font-headline-md text-headline-md font-bold text-primary">Fluid Therapy</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant">account_circle</span>
+</div>
+</header>
+<main class="max-w-md mx-auto px-container-padding pt-stack-md flex flex-col gap-stack-lg">
+<!-- Hero/Instruction Card (Optional context) -->
+<section class="bg-surface-container-lowest rounded-xl p-4 shadow-[0px_2px_8px_rgba(38,50,56,0.08)] border-l-4 border-primary">
+<h2 class="font-label-md text-label-md text-primary mb-1">CALCULATION PROTOCOL</h2>
+<p class="text-on-surface-variant text-sm">Calculate total fluid requirements for a 24-hour period based on dehydration deficit, maintenance, and losses.</p>
+</section>
+<!-- Form Section -->
+<div class="flex flex-col gap-stack-md">
+<!-- Patient Weight Input -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-[0px_2px_8px_rgba(38,50,56,0.08)]">
+<div class="flex justify-between items-end mb-2">
+<label class="font-label-md text-label-md text-on-surface-variant">Patient Weight</label>
+<span class="font-label-sm text-label-sm text-primary uppercase">Required</span>
+</div>
+<div class="relative">
+<input class="w-full h- touch-target-min bg-surface border-none rounded-lg px-4 font-headline-md text-on-surface focus:ring-2 focus:ring-primary outline-none transition-all" id="weight" placeholder="0.0" step="0.1" type="number" value="10"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-label-md">kg</span>
+</div>
+</div>
+<!-- Dehydration Input -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-[0px_2px_8px_rgba(38,50,56,0.08)]">
+<div class="flex justify-between items-center mb-4">
+<label class="font-label-md text-label-md text-on-surface-variant">Dehydration %</label>
+<span class="font-headline-md text-headline-md text-primary" id="dehydration-value">5%</span>
+</div>
+<input class="w-full h-2 bg-surface-container-high rounded-lg appearance-none cursor-pointer" id="dehydration" max="15" min="0" type="range" value="5"/>
+<div class="flex justify-between mt-2 text-[10px] text-outline uppercase font-bold tracking-wider">
+<span>0% (Normal)</span>
+<span>5% (Mild)</span>
+<span>10% (Mod)</span>
+<span>15% (Severe)</span>
+</div>
+</div>
+<!-- Maintenance Rate Input -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-[0px_2px_8px_rgba(38,50,56,0.08)]">
+<label class="font-label-md text-label-md text-on-surface-variant block mb-2">Maintenance Rate</label>
+<div class="flex gap-2">
+<div class="relative flex-1">
+<input class="w-full h-touch-target-min bg-surface border-none rounded-lg px-4 font-headline-md text-on-surface focus:ring-2 focus:ring-primary outline-none" id="maintenance" placeholder="0" type="number" value="50"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-label-md">ml/kg/day</span>
+</div>
+</div>
+<div class="flex gap-2 mt-3">
+<button class="flex-1 py-2 rounded-lg bg-surface-container-high text-on-surface-variant text-label-sm hover:bg-surface-container-highest transition-colors" onclick="setMaintenance(40)">40 (Cat)</button>
+<button class="flex-1 py-2 rounded-lg bg-surface-container-high text-on-surface-variant text-label-sm hover:bg-surface-container-highest transition-colors" onclick="setMaintenance(60)">60 (Dog)</button>
+</div>
+</div>
+<!-- Ongoing Losses Input -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-[0px_2px_8px_rgba(38,50,56,0.08)]">
+<label class="font-label-md text-label-md text-on-surface-variant block mb-2">Ongoing Losses (Est.)</label>
+<div class="relative">
+<input class="w-full h-touch-target-min bg-surface border-none rounded-lg px-4 font-headline-md text-on-surface focus:ring-2 focus:ring-primary outline-none" id="losses" placeholder="0" type="number" value="0"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-label-md">ml/day</span>
+</div>
+</div>
+<!-- Drip Set Selection -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-[0px_2px_8px_rgba(38,50,56,0.08)]">
+<label class="font-label-md text-label-md text-on-surface-variant block mb-2">Drip Set Drop Factor</label>
+<div class="grid grid-cols-3 gap-2">
+<button class="drip-btn py-3 rounded-lg border-2 border-transparent bg-surface-container-high text-on-surface-variant font-label-md hover:bg-surface-container-highest transition-all" onclick="setDripFactor(10, this)">10 <span class="text-[10px] block opacity-70">gtt/ml</span></button>
+<button class="drip-btn py-3 rounded-lg border-2 border-primary bg-primary-container/20 text-primary font-label-md hover:bg-surface-container-highest transition-all" onclick="setDripFactor(15, this)">15 <span class="text-[10px] block opacity-70">gtt/ml</span></button>
+<button class="drip-btn py-3 rounded-lg border-2 border-transparent bg-surface-container-high text-on-surface-variant font-label-md hover:bg-surface-container-highest transition-all" onclick="setDripFactor(60, this)">60 <span class="text-[10px] block opacity-70">gtt/ml</span></button>
+</div>
+</div>
+</div>
+<!-- Results Section -->
+<section class="mt-4 pb-12">
+<div class="bg-primary text-on-primary rounded-xl p-6 shadow-lg relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-on-primary/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
+<div class="relative z-10">
+<h3 class="font-label-md text-label-md text-on-primary-container bg-primary-container inline-block px-3 py-1 rounded-full mb-4">TOTAL REQUISITION</h3>
+<div class="mb-6">
+<span class="font-headline-xl text-headline-xl block" id="total-volume">1,250.0</span>
+<span class="text-sm opacity-90">ml Total Volume (24h)</span>
+</div>
+<div class="grid grid-cols-2 gap-4 border-t border-on-primary/20 pt-6">
+<div>
+<span class="font-headline-lg text-headline-lg block" id="hourly-rate">52.1</span>
+<span class="text-xs opacity-80 uppercase tracking-tight font-bold">ml/hour</span>
+</div>
+<div>
+<span class="font-headline-lg text-headline-lg block" id="drip-rate">13</span>
+<span class="text-xs opacity-80 uppercase tracking-tight font-bold">drops/min</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Save/Share Actions -->
+<div class="flex gap-3 mt-6">
+<button class="flex-1 h-touch-target-min bg-surface-container-highest text-primary font-bold rounded-lg flex items-center justify-center gap-2 active:scale-95 transition-transform shadow-sm">
+<span class="material-symbols-outlined">save</span> Save
+        </button>
+<button class="flex-1 h-touch-target-min bg-primary text-white font-bold rounded-lg flex items-center justify-center gap-2 active:scale-95 transition-transform shadow-sm">
+<span class="material-symbols-outlined">print</span> Report
+        </button>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 left-0 right-0 flex justify-around items-center px-4 pb-safe bg-surface shadow-[0px_-2px_8px_rgba(38,50,56,0.08)] h-[64px] z-50">
+<a class="flex flex-col items-center justify-center text-on-surface-variant pt-2 hover:bg-surface-container-low transition-colors w-full h-full" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary font-bold border-t-2 border-primary pt-2 hover:bg-surface-container-low transition-colors w-full h-full" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">pets</span>
+<span class="font-label-sm text-label-sm">Patients</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant pt-2 hover:bg-surface-container-low transition-colors w-full h-full" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-label-sm text-label-sm">Library</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant pt-2 hover:bg-surface-container-low transition-colors w-full h-full" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-sm text-label-sm">History</span>
+</a>
+</nav>
+<script>
+    let currentDripFactor = 15;
+
+    const weightInput = document.getElementById('weight');
+    const dehydrationInput = document.getElementById('dehydration');
+    const dehydrationVal = document.getElementById('dehydration-value');
+    const maintenanceInput = document.getElementById('maintenance');
+    const lossesInput = document.getElementById('losses');
+
+    const totalVolumeDisplay = document.getElementById('total-volume');
+    const hourlyRateDisplay = document.getElementById('hourly-rate');
+    const dripRateDisplay = document.getElementById('drip-rate');
+
+    function calculate() {
+      const weight = parseFloat(weightInput.value) || 0;
+      const dehydration = parseFloat(dehydrationInput.value) || 0;
+      const maintenance = parseFloat(maintenanceInput.value) || 0;
+      const losses = parseFloat(lossesInput.value) || 0;
+
+      // Deficit = Weight (kg) * % Dehydration * 10 (to get ml)
+      // Standard Formula: (Weight * % * 1000) / 100 which simplifies to weight * % * 10
+      const deficit = weight * dehydration * 10;
+      const maintenanceTotal = weight * maintenance;
+      
+      const total24h = deficit + maintenanceTotal + losses;
+      const hourly = total24h / 24;
+      const dropsPerMin = (hourly * currentDripFactor) / 60;
+
+      totalVolumeDisplay.innerText = total24h.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
+      hourlyRateDisplay.innerText = hourly.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
+      dripRateDisplay.innerText = Math.round(dropsPerMin);
+
+      dehydrationVal.innerText = dehydration + '%';
+    }
+
+    function setMaintenance(val) {
+      maintenanceInput.value = val;
+      calculate();
+    }
+
+    function setDripFactor(val, btn) {
+      currentDripFactor = val;
+      document.querySelectorAll('.drip-btn').forEach(b => {
+        b.classList.remove('border-primary', 'bg-primary-container/20', 'text-primary');
+        b.classList.add('border-transparent', 'bg-surface-container-high', 'text-on-surface-variant');
+      });
+      btn.classList.add('border-primary', 'bg-primary-container/20', 'text-primary');
+      btn.classList.remove('border-transparent', 'bg-surface-container-high', 'text-on-surface-variant');
+      calculate();
+    }
+
+    [weightInput, dehydrationInput, maintenanceInput, lossesInput].forEach(el => {
+      el.addEventListener('input', calculate);
+    });
+
+    // Initial calc
+    calculate();
+  </script>
+</body></html>

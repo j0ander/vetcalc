@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Source+Sans+3:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed-variant": "#544600",
+                    "on-primary-fixed-variant": "#005312",
+                    "on-surface-variant": "#40493d",
+                    "tertiary": "#705d00",
+                    "surface-container-low": "#e9f6fd",
+                    "error": "#ba1a1a",
+                    "on-secondary-fixed-variant": "#005313",
+                    "on-tertiary-container": "#4c3e00",
+                    "surface": "#f4faff",
+                    "surface-container-highest": "#d7e4ec",
+                    "surface-container-high": "#ddeaf2",
+                    "inverse-surface": "#263238",
+                    "secondary": "#006e1c",
+                    "primary-fixed-dim": "#88d982",
+                    "on-error-container": "#93000a",
+                    "on-primary": "#ffffff",
+                    "on-secondary-container": "#00731e",
+                    "on-tertiary": "#ffffff",
+                    "on-tertiary-fixed": "#221b00",
+                    "surface-dim": "#cfdce4",
+                    "surface-tint": "#1b6d24",
+                    "on-background": "#111d23",
+                    "outline": "#707a6c",
+                    "secondary-fixed-dim": "#78dc77",
+                    "inverse-primary": "#88d982",
+                    "on-primary-container": "#cbffc2",
+                    "primary": "#0d631b",
+                    "outline-variant": "#bfcaba",
+                    "tertiary-container": "#c9a900",
+                    "tertiary-fixed": "#ffe16d",
+                    "surface-bright": "#f4faff",
+                    "on-error": "#ffffff",
+                    "on-primary-fixed": "#002204",
+                    "secondary-container": "#91f78e",
+                    "surface-container": "#e3f0f8",
+                    "surface-variant": "#d7e4ec",
+                    "inverse-on-surface": "#e6f3fb",
+                    "on-secondary-fixed": "#002204",
+                    "on-surface": "#111d23",
+                    "tertiary-fixed-dim": "#e9c400",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-container": "#2e7d32",
+                    "error-container": "#ffdad6",
+                    "secondary-fixed": "#94f990",
+                    "background": "#f4faff",
+                    "on-secondary": "#ffffff",
+                    "primary-fixed": "#a3f69c"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "touch-target-min": "48px",
+                    "base": "8px",
+                    "stack-lg": "24px",
+                    "gutter": "12px",
+                    "container-padding": "16px",
+                    "stack-sm": "4px",
+                    "stack-md": "16px"
+            },
+            "fontFamily": {
+                    "label-sm": ["Inter"],
+                    "body-md": ["Source Sans 3"],
+                    "headline-lg-mobile": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "label-md": ["Inter"],
+                    "body-lg": ["Source Sans 3"],
+                    "headline-md": ["Inter"],
+                    "headline-xl": ["Inter"]
+            },
+            "fontSize": {
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["22px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "26px", "fontWeight": "400"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-xl": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Source Sans 3', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .glass-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.4); }
+        .glow-gold { filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.4)); }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col items-center">
+<!-- Top App Bar -->
+<header class="w-full top-0 sticky bg-surface z-50 shadow-sm flex justify-between items-center px-container-padding h-touch-target-min">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary font-headline-md text-headline-md" style="font-variation-settings: 'FILL' 1;">pets</span>
+<span class="font-headline-md text-headline-md font-bold text-primary">VetCalc</span>
+</div>
+<button class="h-touch-target-min w-touch-target-min flex items-center justify-center hover:bg-surface-container-high rounded-full transition-colors" onclick="window.history.back()">
+<span class="material-symbols-outlined text-on-surface-variant">close</span>
+</button>
+</header>
+<main class="w-full max-w-md px-container-padding flex flex-col py-stack-lg pb-32">
+<!-- Hero Section -->
+<section class="relative rounded-xl overflow-hidden mb-stack-lg p-6 flex flex-col items-center text-center">
+<div class="absolute inset-0 z-0">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/10 to-tertiary/10"></div>
+<div class="absolute top-0 right-0 w-32 h-32 bg-tertiary-fixed opacity-20 blur-3xl rounded-full"></div>
+</div>
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-16 h-16 bg-tertiary-fixed rounded-full flex items-center justify-center mb-4 glow-gold border-2 border-white">
+<span class="material-symbols-outlined text-tertiary text-4xl" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+</div>
+<h1 class="font-headline-xl text-headline-xl mb-2 text-on-surface">Go Pro with VetCalc</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Empower your clinical practice with elite tools and seamless synchronization.</p>
+</div>
+</section>
+<!-- Pricing Toggle -->
+<div class="flex bg-surface-container-highest p-1 rounded-full mb-stack-lg w-fit mx-auto">
+<button class="px-6 py-2 rounded-full font-label-md text-label-md transition-all bg-white shadow-sm text-primary" id="monthly-toggle" onclick="setPricing('monthly')">Monthly</button>
+<button class="px-6 py-2 rounded-full font-label-md text-label-md transition-all text-on-surface-variant" id="annual-toggle" onclick="setPricing('annual')">Annual <span class="text-secondary font-bold text-[10px] bg-secondary-container px-1 rounded ml-1">SAVE 20%</span></button>
+</div>
+<!-- Benefits Grid -->
+<div class="grid grid-cols-1 gap-gutter mb-stack-lg">
+<div class="glass-card p-stack-md rounded-xl flex items-start gap-4">
+<div class="p-2 bg-primary-container/20 rounded-lg">
+<span class="material-symbols-outlined text-primary">medical_services</span>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-on-surface">Advanced Anesthesia Protocols</h3>
+<p class="font-body-md text-[14px] text-on-surface-variant leading-tight">Complex multi-drug calculation engines for critical cases.</p>
+</div>
+</div>
+<div class="glass-card p-stack-md rounded-xl flex items-start gap-4">
+<div class="p-2 bg-primary-container/20 rounded-lg">
+<span class="material-symbols-outlined text-primary">groups</span>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-on-surface">Unlimited Patient Profiles</h3>
+<p class="font-body-md text-[14px] text-on-surface-variant leading-tight">Store comprehensive histories for every animal in your clinic.</p>
+</div>
+</div>
+<div class="glass-card p-stack-md rounded-xl flex items-start gap-4">
+<div class="p-2 bg-primary-container/20 rounded-lg">
+<span class="material-symbols-outlined text-primary">library_books</span>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-on-surface">Offline Reference Library</h3>
+<p class="font-body-md text-[14px] text-on-surface-variant leading-tight">Access vital clinical data even without an active internet connection.</p>
+</div>
+</div>
+<div class="glass-card p-stack-md rounded-xl flex items-start gap-4">
+<div class="p-2 bg-primary-container/20 rounded-lg">
+<span class="material-symbols-outlined text-primary">cloud_sync</span>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-on-surface">Cloud Sync</h3>
+<p class="font-body-md text-[14px] text-on-surface-variant leading-tight">Instant data consistency across your phone, tablet, and desktop.</p>
+</div>
+</div>
+</div>
+<!-- Visual Context -->
+<div class="w-full h-48 rounded-2xl overflow-hidden mb-stack-lg shadow-sm border border-outline-variant relative">
+<img alt="Clinical Veterinarian using high-tech tablet" class="w-full h-full object-cover" data-alt="A professional female veterinarian in clean teal scrubs focusing intensely on a high-resolution digital tablet in a bright, modern clinical setting. The background shows soft-focus veterinary medical equipment and a sterile atmosphere with cool-grey tones and clinical white surfaces. The scene is illuminated by professional overhead lighting, reflecting a life sciences aesthetic of precision and reliability." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkbkAguNth1lJ6_j-_dJMR0BI_pEc_oSbGiFFp3Ey0hdidWodxUtx6l-d2oZwumRwV-XBxIM3eJ3bs5c1SPZ3AjXgIgcvYZjFBZaF2AGh346McVY8beJeJp6E5LaxbYWmmPE40ksJ2jLHCBEe6homzBz4Po6i6DkVLk5YEWPPFCrN6ILIWcW6XbakQ7rjVgArB3IGfqQcGOdyuQJ-a652ki1RvXKddwOJL2AD9VvMBE0abw-KrFMekidrWgLGj6AZVCR2BaPqQB5hm"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
+<span class="text-white font-label-md text-label-md italic">Used by 5,000+ veterinary clinics worldwide</span>
+</div>
+</div>
+</main>
+<!-- Bottom Purchase Bar -->
+<div class="fixed bottom-0 left-0 right-0 p-container-padding bg-surface shadow-[0px_-4px_12px_rgba(0,0,0,0.05)] border-t border-outline-variant z-[100] max-w-md mx-auto w-full">
+<div class="flex items-center justify-between mb-4">
+<div>
+<span class="font-headline-md text-headline-md font-bold text-on-surface" id="pricing-label">$9.99</span>
+<span class="font-body-md text-on-surface-variant" id="pricing-period">/ month</span>
+</div>
+<div class="text-right">
+<p class="font-label-sm text-label-sm text-secondary">Cancel anytime</p>
+</div>
+</div>
+<button class="w-full h-touch-target-min bg-primary text-on-primary rounded-xl font-headline-md text-headline-md font-bold shadow-lg active:scale-[0.98] transition-transform flex items-center justify-center gap-2">
+            Upgrade to Pro
+            <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<p class="text-center mt-3 font-label-sm text-label-sm text-on-surface-variant">Restore Purchase</p>
+</div>
+<script>
+        function setPricing(type) {
+            const monthlyBtn = document.getElementById('monthly-toggle');
+            const annualBtn = document.getElementById('annual-toggle');
+            const priceLabel = document.getElementById('pricing-label');
+            const pricePeriod = document.getElementById('pricing-period');
+
+            if (type === 'monthly') {
+                monthlyBtn.classList.add('bg-white', 'shadow-sm', 'text-primary');
+                monthlyBtn.classList.remove('text-on-surface-variant');
+                annualBtn.classList.remove('bg-white', 'shadow-sm', 'text-primary');
+                annualBtn.classList.add('text-on-surface-variant');
+                
+                priceLabel.innerText = '$9.99';
+                pricePeriod.innerText = '/ month';
+            } else {
+                annualBtn.classList.add('bg-white', 'shadow-sm', 'text-primary');
+                annualBtn.classList.remove('text-on-surface-variant');
+                monthlyBtn.classList.remove('bg-white', 'shadow-sm', 'text-primary');
+                monthlyBtn.classList.add('text-on-surface-variant');
+                
+                priceLabel.innerText = '$95.88';
+                pricePeriod.innerText = '/ year';
+            }
+        }
+    </script>
+</body></html>
