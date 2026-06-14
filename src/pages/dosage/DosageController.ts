@@ -1,17 +1,29 @@
+// src/pages/dosage/DosageController.ts
 import { DosageView } from './DosageView';
 import { router, type Destroyable } from '@/services/RouterService';
+import { BaseController } from '@/controllers/BaseController';
 import type { AppRoute } from '@/types';
 
-export class DosageController implements Destroyable {
+export class DosageController extends BaseController implements Destroyable {
   private view: DosageView;
 
   constructor() {
+    super(); // Llama al constructor de BaseController
     this.view = new DosageView();
   }
 
   async init(): Promise<void> {
     this.view.render();
+
+    // Navegación global para todos los [data-route]
+    this.setupGlobalNavigation();
+
+    // Badge premium (color según suscripción)
+    this.initPremiumBadge();
+
+    // Configurar eventos específicos del dosage
     this.setupEventListeners();
+
     // Valores por defecto de ejemplo
     this.view.setWeight(28.5);
     this.view.setDosage(5);
@@ -20,22 +32,10 @@ export class DosageController implements Destroyable {
   }
 
   private setupEventListeners(): void {
-    // Navegación general
-    document.querySelectorAll('[data-route]').forEach(el => {
-      el.addEventListener('click', async (e) => {
-        e.preventDefault();
-        const route = el.getAttribute('data-route') as AppRoute;
-        if (route) {
-          await router.navigate(route);
-        }
-      });
-    });
-
     // Botón calcular
     const calcBtn = this.view.getCalculateButton();
     calcBtn?.addEventListener('click', () => {
       this.calculate();
-      // Efecto de escala
       calcBtn.classList.add('scale-95');
       setTimeout(() => calcBtn.classList.remove('scale-95'), 150);
     });
@@ -71,7 +71,6 @@ export class DosageController implements Destroyable {
   }
 
   private saveToHistory(): void {
-    // Por ahora solo console.log, luego se integrará con IndexedDB
     console.log('Guardar cálculo en historial:', {
       drug: this.view.getDrugName(),
       weight: this.view.getWeight(),
@@ -83,6 +82,7 @@ export class DosageController implements Destroyable {
   }
 
   destroy(): void {
+    this.destroyPremiumBadge(); // Limpiar suscripción premium
     console.log('[DosageController] Destroyed');
   }
 }

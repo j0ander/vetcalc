@@ -24,7 +24,7 @@ export class HomeController extends BaseController implements Destroyable {
   }
 
   async init(): Promise<void> {
-    this.view.render()
+    this.view.render();
 
     // Efecto ripple en las tarjetas
     document.querySelectorAll('.glass-card').forEach((card) => {
@@ -42,83 +42,51 @@ export class HomeController extends BaseController implements Destroyable {
       });
     });
 
-    // Inicializar el badge premium (esto maneja la suscripción y el estado actual)
-    this.initPremiumBadge();
+    // Navegación global (para cualquier elemento con data-route)
+    this.setupGlobalNavigation();
 
-    this.setupElements()
-    this.setupNavigation()
-    this.renderRecentPatients()
-    this.renderRecentHistory()
-    this.renderTipOfTheDay()
-    this.setupConnectivityMonitoring()
-    this.updateOnlineStatus(navigator.onLine)
+    // Badge premium (color según suscripción)
+    this.initPremiumBadge();
+    // Listeners específicos (search, profile, view all)
+  this.setupSpecificListeners();
+    // Configuración específica de Home (que no usa data-route)
+    this.setupElements();
+    this.renderRecentPatients();
+    this.renderRecentHistory();
+    this.renderTipOfTheDay();
+    this.setupConnectivityMonitoring();
+    this.updateOnlineStatus(navigator.onLine);
   }
 
-  destroy(): void {
-    // Limpiar listeners de conexión
+   destroy(): void {
     window.removeEventListener('online', this.onlineHandler)
     window.removeEventListener('offline', this.offlineHandler)
-    // Limpiar suscripción premium
     this.destroyPremiumBadge();
     console.log('[HomeController] Destroyed')
   }
 
-  private setupElements(): void {
-    this.view.showRecentPatientsSection()
+  // 👇 Método que faltaba (defínelo aquí)
+  private setupSpecificListeners(): void {
+    const searchBtn = this.view.getSearchButton();
+    if (searchBtn) {
+      searchBtn.addEventListener('click', () => console.log('[Home] Search clicked'));
+    }
+    const profileBtn = this.view.getProfileButton();
+    if (profileBtn) {
+      profileBtn.addEventListener('click', () => console.log('[Home] Profile clicked'));
+    }
+    const viewAllHistory = this.view.getViewAllHistoryButton();
+    if (viewAllHistory) {
+      viewAllHistory.addEventListener('click', async () => this.navigateToModule('history'));
+    }
+    const viewAllPatients = this.view.getViewAllPatientsButton();
+    if (viewAllPatients) {
+      viewAllPatients.addEventListener('click', async () => this.navigateToModule('patients'));
+    }
   }
 
-  private setupNavigation(): void {
-    const cards = this.view.getModuleCards()
-    cards.forEach((card) => {
-      const route = card.getAttribute('data-route')
-      card.addEventListener('click', async (e) => {
-        e.preventDefault()
-        e.stopPropagation()
-        if (route) {
-          await this.navigateToModule(route as AppRoute)
-        }
-      })
-    })
-
-    const bottomNavLinks = this.view.getBottomNavLinks()
-    bottomNavLinks.forEach((link) => {
-      const route = link.getAttribute('data-route')
-      link.addEventListener('click', async (e) => {
-        e.preventDefault()
-        e.stopPropagation()
-        if (route && route !== 'home') {
-          await this.navigateToModule(route as AppRoute)
-        }
-      })
-    })
-
-    const searchBtn = this.view.getSearchButton()
-    if (searchBtn) {
-      searchBtn.addEventListener('click', () => {
-        console.log('[Home] Search clicked')
-      })
-    }
-
-    const profileBtn = this.view.getProfileButton()
-    if (profileBtn) {
-      profileBtn.addEventListener('click', () => {
-        console.log('[Home] Profile clicked')
-      })
-    }
-
-    const viewAllHistory = this.view.getViewAllHistoryButton()
-    if (viewAllHistory) {
-      viewAllHistory.addEventListener('click', async () => {
-        await this.navigateToModule('history')
-      })
-    }
-
-    const viewAllPatients = this.view.getViewAllPatientsButton()
-    if (viewAllPatients) {
-      viewAllPatients.addEventListener('click', async () => {
-        await this.navigateToModule('patients')
-      })
-    }
+  private setupElements(): void {
+    this.view.showRecentPatientsSection()
   }
 
   private async navigateToModule(route: AppRoute): Promise<void> {

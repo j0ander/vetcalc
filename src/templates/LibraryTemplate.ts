@@ -12,6 +12,10 @@ export const LibraryTemplate = `
     <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors duration-200">
       <span class="material-symbols-outlined text-on-surface-variant">account_circle</span>
     </button>
+    <button class="premium-badge flex items-center gap-1 px-3 py-1 rounded-full border shadow-sm transition-colors duration-200 bg-surface-container-high text-on-surface-variant border-outline-variant" data-route="premium">
+  <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+  <span class="font-label-sm text-label-sm">PREMIUM</span>
+</button>
   </div>
 </header>
 

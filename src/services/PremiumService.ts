@@ -1,7 +1,7 @@
 type PremiumListener = (isPremium: boolean) => void;
 
 class PremiumService {
-  private isPremium: boolean = true;
+  private isPremium: boolean = false;
   private listeners: PremiumListener[] = [];
 
   constructor() {

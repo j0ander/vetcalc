@@ -1,5 +1,7 @@
+// src/pages/converter/ConverterController.ts
 import { ConverterView } from './ConverterView';
 import { router, type Destroyable } from '@/services/RouterService';
+import { BaseController } from '@/controllers/BaseController';
 import type { AppRoute } from '@/types';
 
 type ConverterMode = 'weight' | 'temp' | 'volume';
@@ -13,7 +15,7 @@ interface ModeConfig {
   convert: (value: number, direction: 'leftToRight' | 'rightToLeft') => number;
 }
 
-export class ConverterController implements Destroyable {
+export class ConverterController extends BaseController implements Destroyable {
   private view: ConverterView;
   private currentMode: ConverterMode = 'weight';
   private modes: Record<ConverterMode, ModeConfig> = {
@@ -44,13 +46,22 @@ export class ConverterController implements Destroyable {
   };
 
   constructor() {
+    super(); // Llama al constructor de BaseController
     this.view = new ConverterView();
   }
 
   async init(): Promise<void> {
     this.view.render();
+
+    // Navegación global para todos los elementos con data-route
+    this.setupGlobalNavigation();
+
+    // Inicializar badge premium (color según suscripción)
+    this.initPremiumBadge();
+
+    // Configurar eventos específicos del convertidor
     this.setupEventListeners();
-    this.applyMode('weight'); // modo inicial
+    this.applyMode('weight');
   }
 
   private setupEventListeners(): void {
@@ -74,34 +85,19 @@ export class ConverterController implements Destroyable {
     // Swap button
     const swapBtn = this.view.getSwapBtn();
     swapBtn?.addEventListener('click', () => this.swap());
-
-    // Navegación general (botones con data-route)
-    document.querySelectorAll('[data-route]').forEach(el => {
-      el.addEventListener('click', async (e) => {
-        e.preventDefault();
-        const route = el.getAttribute('data-route') as AppRoute;
-        if (route) {
-          await router.navigate(route);
-        }
-      });
-    });
   }
 
   private applyMode(mode: ConverterMode): void {
     this.currentMode = mode;
     const cfg = this.modes[mode];
 
-    // Actualizar etiquetas y unidades
     this.view.updateLeftLabel(cfg.leftLabel);
     this.view.updateRightLabel(cfg.rightLabel);
     this.view.updateLeftUnit(cfg.leftUnit);
     this.view.updateRightUnit(cfg.rightUnit);
     this.view.updateReference(cfg.reference);
-
-    // Limpiar inputs
     this.view.clearInputs();
 
-    // Actualizar estilo de las pestañas (clase activa)
     const tabs = this.view.getTabs();
     tabs?.forEach(tab => {
       const tabMode = tab.getAttribute('data-mode');
@@ -140,7 +136,6 @@ export class ConverterController implements Destroyable {
   private swap(): void {
     const leftVal = this.view.getInputLeftValue();
     const rightVal = this.view.getInputRightValue();
-    // Intercambiar valores
     if (leftVal !== null) {
       this.view.setInputRightValue(leftVal.toFixed(2));
     } else {
@@ -151,12 +146,11 @@ export class ConverterController implements Destroyable {
     } else {
       this.view.setInputLeftValue('');
     }
-    // Recalcular para mantener consistencia (opcional)
     this.convertFromLeft();
   }
 
   destroy(): void {
-    // Limpiar listeners si es necesario (por ahora no hay globales)
+    this.destroyPremiumBadge(); // Limpiar suscripción premium
     console.log('[ConverterController] Destroyed');
   }
 }

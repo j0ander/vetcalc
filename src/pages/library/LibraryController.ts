@@ -1,37 +1,34 @@
+// src/pages/library/LibraryController.ts
 import { LibraryView } from './LibraryView';
 import { router, type Destroyable } from '@/services/RouterService';
+import { BaseController } from '@/controllers/BaseController';
 import type { AppRoute } from '@/types';
 
-export class LibraryController implements Destroyable {
+export class LibraryController extends BaseController implements Destroyable {
   private view: LibraryView;
 
   constructor() {
+    super(); // Llama al constructor de BaseController
     this.view = new LibraryView();
   }
 
   async init(): Promise<void> {
     this.view.render();
-    this.setupEventListeners();
-    this.setupNavigation();
-  }
 
-  private setupNavigation(): void {
-    document.querySelectorAll('[data-route]').forEach(el => {
-      el.addEventListener('click', async (e) => {
-        e.preventDefault();
-        const route = el.getAttribute('data-route') as AppRoute;
-        if (route) {
-          await router.navigate(route);
-        }
-      });
-    });
+    // Navegación global para todos los elementos con data-route
+    this.setupGlobalNavigation();
+
+    // Badge premium (color según suscripción)
+    this.initPremiumBadge();
+
+    // Configurar eventos específicos de la biblioteca
+    this.setupEventListeners();
   }
 
   private setupEventListeners(): void {
     // Clic en recursos
     this.view.onResourceClick((id) => {
       console.log(`[Library] Abrir recurso: ${id}`);
-      // Aquí se podría abrir un modal o navegar a detalle
       alert(`Funcionalidad en desarrollo: ${id}`);
     });
 
@@ -49,11 +46,10 @@ export class LibraryController implements Destroyable {
     // Filtros (simulación)
     this.view.onFilterChange((filter) => {
       console.log(`[Library] Filtro: ${filter}`);
-      // Aquí se podría implementar lógica real
       alert(`Filtro aplicado: ${filter}`);
     });
 
-    // Botón upgrade
+    // Botón upgrade (aunque ya tiene data-route, mantenemos el listener por si acaso)
     const upgradeBtn = this.view.getUpgradeBtn();
     upgradeBtn?.addEventListener('click', () => {
       router.navigate('premium');
@@ -61,6 +57,7 @@ export class LibraryController implements Destroyable {
   }
 
   destroy(): void {
+    this.destroyPremiumBadge(); // Limpiar suscripción premium
     console.log('[LibraryController] Destroyed');
   }
 }

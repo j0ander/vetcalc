@@ -8,6 +8,10 @@ export const PatientsTemplate = `
   <div class="flex items-center">
     <button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-container-high p-2 rounded-full transition-colors duration-200" data-route="home">account_circle</button>
   </div>
+  <button class="premium-badge flex items-center gap-1 px-3 py-1 rounded-full border shadow-sm transition-colors duration-200 bg-surface-container-high text-on-surface-variant border-outline-variant" data-route="premium">
+  <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+  <span class="font-label-sm text-label-sm">PREMIUM</span>
+</button>
 </header>
 
 <main class="px-container-padding pt-stack-md space-y-stack-lg">
