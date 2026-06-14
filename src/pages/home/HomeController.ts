@@ -1,11 +1,12 @@
-// src/pages/home/HomeController.ts (ACTUALIZADO CON DESTROYABLE)
+// src/pages/home/HomeController.ts
 import { HomeView } from './HomeView'
 import { router, type Destroyable } from '@/services/RouterService'
 import { mockDataService } from '@/services/MockDataService'
 import { VET_TIPS } from '@/constants'
 import type { AppRoute, Patient, CalculationRecord } from '@/types'
+import { BaseController } from '@/controllers/BaseController'
 
-export class HomeController implements Destroyable {
+export class HomeController extends BaseController implements Destroyable {
   private view: HomeView
   private onlineStatus: boolean = true
 
@@ -18,11 +19,14 @@ export class HomeController implements Destroyable {
   }
 
   constructor() {
+    super() // Llama al constructor de BaseController
     this.view = new HomeView()
   }
 
   async init(): Promise<void> {
     this.view.render()
+
+    // Efecto ripple en las tarjetas
     document.querySelectorAll('.glass-card').forEach((card) => {
       const htmlCard = card as HTMLElement;
       htmlCard.addEventListener('click', (mouseEvent: MouseEvent) => {
@@ -37,6 +41,10 @@ export class HomeController implements Destroyable {
         setTimeout(() => ripple.remove(), 600);
       });
     });
+
+    // Inicializar el badge premium (esto maneja la suscripción y el estado actual)
+    this.initPremiumBadge();
+
     this.setupElements()
     this.setupNavigation()
     this.renderRecentPatients()
@@ -47,8 +55,11 @@ export class HomeController implements Destroyable {
   }
 
   destroy(): void {
+    // Limpiar listeners de conexión
     window.removeEventListener('online', this.onlineHandler)
     window.removeEventListener('offline', this.offlineHandler)
+    // Limpiar suscripción premium
+    this.destroyPremiumBadge();
     console.log('[HomeController] Destroyed')
   }
 

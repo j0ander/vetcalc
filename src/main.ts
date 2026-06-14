@@ -3,6 +3,14 @@ import { router, type Destroyable } from '@/services/RouterService'
 import { SplashController } from '@/pages/splash/SplashController'
 import { HomeController } from '@/pages/home/HomeController'
 import type { AppRoute } from '@/types'
+import { ConverterController } from '@/pages/converter/ConverterController';
+import { AnesthesiaController } from '@/pages/anesthesia/AnesthesiaController';
+import { DosageController } from '@/pages/dosage/DosageController';
+import { FluidotherapyController } from '@/pages/fluidotherapy/FluidotherapyController';
+import { HistoryController } from '@/pages/history/HistoryController';
+import { LibraryController } from '@/pages/library/LibraryController';
+import { PatientsController } from '@/pages/patients/PatientsController';
+import { PremiumController } from '@/pages/premium/PremiumController';
 let currentController: Destroyable | null = null
 
 function destroyCurrentController(): void {
@@ -59,14 +67,14 @@ class VetCalcApp {
       }
     }
 
-    registerPage('patients', notImplemented)
-    registerPage('library', notImplemented)
-    registerPage('history', notImplemented)
-    registerPage('fluidotherapy', notImplemented)
-    registerPage('dosage', notImplemented)
-    registerPage('converter', notImplemented)
-    registerPage('anesthesia', notImplemented)
-    registerPage('premium', notImplemented)
+    registerPage('patients', () => new PatientsController())
+    registerPage('library', () => new LibraryController())
+    registerPage('history', () => new HistoryController())
+    registerPage('fluidotherapy', () => new FluidotherapyController())
+    registerPage('dosage', () => new DosageController())
+    registerPage('converter', () => new ConverterController())
+    registerPage('anesthesia', () => new AnesthesiaController())
+    registerPage('premium', () => new PremiumController())
 
     // Service Worker
     if ('serviceWorker' in navigator) {
