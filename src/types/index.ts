@@ -11,7 +11,8 @@ export type AppRoute =
   | 'converter'
   | 'anesthesia'
   | 'premium'
-
+  | 'login'
+  | 'register';
 // ─── Patient ──────────────────────────────────────────────────────────────────
 
 export type Species = 'canine' | 'feline' | 'equine' | 'bovine' | 'avian' | 'exotic'

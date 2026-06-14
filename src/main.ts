@@ -1,8 +1,8 @@
-// src/main.ts (con registerPage helper y splash por sesión)
-import { router, type Destroyable } from '@/services/RouterService'
-import { SplashController } from '@/pages/splash/SplashController'
-import { HomeController } from '@/pages/home/HomeController'
-import type { AppRoute } from '@/types'
+// src/main.ts
+import { router, type Destroyable } from '@/services/RouterService';
+import { SplashController } from '@/pages/splash/SplashController';
+import { HomeController } from '@/pages/home/HomeController';
+import type { AppRoute } from '@/types';
 import { ConverterController } from '@/pages/converter/ConverterController';
 import { AnesthesiaController } from '@/pages/anesthesia/AnesthesiaController';
 import { DosageController } from '@/pages/dosage/DosageController';
@@ -11,90 +11,94 @@ import { HistoryController } from '@/pages/history/HistoryController';
 import { LibraryController } from '@/pages/library/LibraryController';
 import { PatientsController } from '@/pages/patients/PatientsController';
 import { PremiumController } from '@/pages/premium/PremiumController';
-let currentController: Destroyable | null = null
+import { LoginController } from '@/pages/login/LoginController';
+import { RegisterController } from '@/pages/register/RegisterController';
+import { authService } from '@/services/AuthService';
+
+let currentController: Destroyable | null = null;
 
 function destroyCurrentController(): void {
   if (currentController) {
-    currentController.destroy()
-    currentController = null
+    currentController.destroy();
+    currentController = null;
   }
 }
 
-// Helper para registrar páginas que limpian el controlador anterior
-function registerPage(
+// Helper para registrar páginas públicas (sin protección)
+function registerPublicPage(
   route: AppRoute,
   createController: () => Destroyable & { init(): Promise<void> }
 ): void {
   router.register(route, async () => {
-    destroyCurrentController()
-    const controller = createController()
-    currentController = controller
-    await controller.init()
-  })
+    destroyCurrentController();
+    const controller = createController();
+    currentController = controller;
+    await controller.init();
+  });
+}
+
+// Helper para registrar páginas protegidas (requieren login)
+function registerProtectedPage(
+  route: AppRoute,
+  createController: () => Destroyable & { init(): Promise<void> }
+): void {
+  router.register(route, async () => {
+    if (!authService.isLoggedIn()) {
+      await router.navigate('login');
+      return;
+    }
+    destroyCurrentController();
+    const controller = createController();
+    currentController = controller;
+    await controller.init();
+  });
 }
 
 class VetCalcApp {
   async init(): Promise<void> {
-    // Registrar splash (no usa el helper porque no limpia nada)
+    // Rutas públicas (sin login)
     router.register('splash', async () => {
-      const controller = new SplashController()
-      await controller.init()
-    })
+      const controller = new SplashController();
+      await controller.init();
+    });
 
-    // Registrar páginas principales con el helper
-    registerPage('home', () => new HomeController())
+    registerPublicPage('login', () => new LoginController());
+    registerPublicPage('register', () => new RegisterController());
 
-    // Placeholders para Fase 2 (también limpian el controlador anterior)
-    const notImplemented = () => {
-      console.log('[Router] Página no implementada en Fase 2')
-      return {
-        init: async () => {
-          const app = document.getElementById('app')
-          if (app) {
-            app.innerHTML = `
-              <div class="flex flex-col items-center justify-center min-h-screen p-4 text-center">
-                <span class="material-symbols-outlined text-6xl text-primary mb-4">construction</span>
-                <h2 class="font-headline-md text-headline-md mb-2">Próximamente</h2>
-                <p class="text-on-surface-variant">Esta pantalla estará disponible en la Fase 2 del desarrollo.</p>
-                <button onclick="window.location.hash='home'" class="mt-6 px-6 py-2 bg-primary text-on-primary rounded-lg">
-                  Volver al inicio
-                </button>
-              </div>
-            `
-          }
-        },
-        destroy: () => {}
-      }
-    }
-
-    registerPage('patients', () => new PatientsController())
-    registerPage('library', () => new LibraryController())
-    registerPage('history', () => new HistoryController())
-    registerPage('fluidotherapy', () => new FluidotherapyController())
-    registerPage('dosage', () => new DosageController())
-    registerPage('converter', () => new ConverterController())
-    registerPage('anesthesia', () => new AnesthesiaController())
-    registerPage('premium', () => new PremiumController())
+    // Rutas protegidas (requieren login)
+    registerProtectedPage('home', () => new HomeController());
+    registerProtectedPage('patients', () => new PatientsController());
+    registerProtectedPage('library', () => new LibraryController());
+    registerProtectedPage('history', () => new HistoryController());
+    registerProtectedPage('fluidotherapy', () => new FluidotherapyController());
+    registerProtectedPage('dosage', () => new DosageController());
+    registerProtectedPage('converter', () => new ConverterController());
+    registerProtectedPage('anesthesia', () => new AnesthesiaController());
+    registerProtectedPage('premium', () => new PremiumController());
 
     // Service Worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js')
           .then(reg => console.log('[SW] OK', reg))
-          .catch(err => console.log('[SW] ERROR', err))
-      })
+          .catch(err => console.log('[SW] ERROR', err));
+      });
     }
 
-    // Mostrar splash solo una vez por sesión
-    const splashShown = sessionStorage.getItem('vetcalc-splash-shown') === 'true'
+    // Determinar ruta inicial
+    const splashShown = sessionStorage.getItem('vetcalc-splash-shown') === 'true';
     if (!splashShown) {
-      sessionStorage.setItem('vetcalc-splash-shown', 'true')
-      await router.navigate('splash')
+      sessionStorage.setItem('vetcalc-splash-shown', 'true');
+      await router.navigate('splash');
     } else {
-      const initialRoute = router.resolveInitialRoute()
-      await router.navigate(initialRoute)
+      let initialRoute = router.resolveInitialRoute();
+      // Si no hay sesión y la ruta inicial no es pública, redirigir a login
+      if (!authService.isLoggedIn() && initialRoute !== 'splash' && initialRoute !== 'login' && initialRoute !== 'register') {
+        initialRoute = 'login';
+      }
+      await router.navigate(initialRoute);
     }
   }
 }
 
-new VetCalcApp().init()
+new VetCalcApp().init();

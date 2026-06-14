@@ -1,25 +1,25 @@
-import Dexie, { type Table } from 'dexie'
-import type { Patient, CalculationRecord } from '@/types'
-import { DB_NAME, DB_VERSION } from '@/constants'
+import Dexie, { Table } from 'dexie';
 
-// ─── VetCalc Database ─────────────────────────────────────────────────────────
-// Schema prepared for all future modules.
-// Only patients + calculationHistory are needed for MVP; add tables per phase.
+export interface User {
+  id?: number;
+  email: string;
+  password: string; // En demo texto plano, en producción usar hash
+  isPremium: boolean;
+  name: string;
+  createdAt: Date;
+}
 
 export class VetCalcDB extends Dexie {
-  patients!: Table<Patient, string>
-  calculationHistory!: Table<CalculationRecord, string>
+  users!: Table<User>;
+  // tus otras tablas (pacientes, historial) ya existentes
 
   constructor() {
-    super(DB_NAME)
-
-    this.version(DB_VERSION).stores({
-      // Primary key + indexed fields
-      patients: 'id, name, species, status, createdAt, updatedAt',
-      calculationHistory: 'id, type, patientId, createdAt',
-    })
+    super('VetCalcDB');
+    this.version(2).stores({
+      users: '++id, email, isPremium'
+      // mantener las versiones anteriores de otras tablas
+    });
   }
 }
 
-// Singleton instance
-export const db = new VetCalcDB()
+export const db = new VetCalcDB();
