@@ -1,10 +1,10 @@
-// src/pages/home/HomeController.ts
 import { HomeView } from './HomeView'
 import { router, type Destroyable } from '@/services/RouterService'
 import { mockDataService } from '@/services/MockDataService'
 import { VET_TIPS } from '@/constants'
 import type { AppRoute, Patient, CalculationRecord } from '@/types'
 import { BaseController } from '@/controllers/BaseController'
+import { authService } from '@/services/AuthService'
 
 export class HomeController extends BaseController implements Destroyable {
   private view: HomeView
@@ -19,70 +19,99 @@ export class HomeController extends BaseController implements Destroyable {
   }
 
   constructor() {
-    super() // Llama al constructor de BaseController
+    super()
     this.view = new HomeView()
   }
 
   async init(): Promise<void> {
-    this.view.render();
+    this.view.render()
 
-    // Efecto ripple en las tarjetas
+    // Ripple effect en tarjetas
     document.querySelectorAll('.glass-card').forEach((card) => {
-      const htmlCard = card as HTMLElement;
+      const htmlCard = card as HTMLElement
       htmlCard.addEventListener('click', (mouseEvent: MouseEvent) => {
-        const ripple = document.createElement('span');
-        ripple.classList.add('ripple');
-        htmlCard.appendChild(ripple);
-        const rect = htmlCard.getBoundingClientRect();
-        const x = mouseEvent.clientX - rect.left;
-        const y = mouseEvent.clientY - rect.top;
-        ripple.style.left = `${x}px`;
-        ripple.style.top = `${y}px`;
-        setTimeout(() => ripple.remove(), 600);
-      });
-    });
+        const ripple = document.createElement('span')
+        ripple.classList.add('ripple')
+        htmlCard.appendChild(ripple)
+        const rect = htmlCard.getBoundingClientRect()
+        const x = mouseEvent.clientX - rect.left
+        const y = mouseEvent.clientY - rect.top
+        ripple.style.left = `${x}px`
+        ripple.style.top = `${y}px`
+        setTimeout(() => ripple.remove(), 600)
+      })
+    })
 
-    // Navegación global (para cualquier elemento con data-route)
-    this.setupGlobalNavigation();
+    // Navegación global
+    this.setupGlobalNavigation()
+    this.initPremiumBadge()
+    this.setupSpecificListeners()
 
-    // Badge premium (color según suscripción)
-    this.initPremiumBadge();
-    // Listeners específicos (search, profile, view all)
-  this.setupSpecificListeners();
-    // Configuración específica de Home (que no usa data-route)
-    this.setupElements();
-    this.renderRecentPatients();
-    this.renderRecentHistory();
-    this.renderTipOfTheDay();
-    this.setupConnectivityMonitoring();
-    this.updateOnlineStatus(navigator.onLine);
+    // Mostrar nombre del usuario (si está logueado)
+    this.updateGreeting()
+
+    // Renderizar módulos de la nueva interfaz
+    this.renderReminders()
+    this.renderWeightEntries()
+
+    // Funcionalidades existentes
+    this.setupElements()
+    this.renderRecentPatients()
+    this.renderRecentHistory()
+    this.renderTipOfTheDay()
+    this.setupConnectivityMonitoring()
+    this.updateOnlineStatus(navigator.onLine)
   }
 
-   destroy(): void {
+  destroy(): void {
     window.removeEventListener('online', this.onlineHandler)
     window.removeEventListener('offline', this.offlineHandler)
-    this.destroyPremiumBadge();
+    this.destroyPremiumBadge()
     console.log('[HomeController] Destroyed')
   }
 
-  // 👇 Método que faltaba (defínelo aquí)
+  private updateGreeting(): void {
+    const user = authService.getCurrentUser()
+    const greetingEl = this.view.getGreetingElement()
+    if (greetingEl && user) {
+      greetingEl.textContent = `Hola, ${user.name}`
+    } else if (greetingEl) {
+      greetingEl.textContent = 'Hola, Dr. Smith'
+    }
+  }
+
+  private renderReminders(): void {
+    // Datos mock de recordatorios (en el futuro desde IndexedDB)
+    const reminders = [
+      { time: '11:20 AM', title: 'Cita', description: 'Doctor Paul' },
+      { time: '1:00 PM', title: 'Medicación', description: '2 pastillas de 10g' },
+      { time: '2:30 PM', title: 'Aseo', description: 'Baño y cepillado' }
+    ]
+    this.view.renderReminders(reminders)
+  }
+
+  private renderWeightEntries(): void {
+    // Datos mock de seguimiento de peso
+    const entries = [
+      { weight: 4.3, date: '25 Sep, 2023' },
+      { weight: 4.0, date: '20 Sep, 2023', change: -7 },
+      { weight: 4.1, date: '5 Sep, 2023', change: 4.7 }
+    ]
+    this.view.renderWeightEntries(entries)
+  }
+
+  // El resto de métodos se mantienen igual (setupElements, setupSpecificListeners, etc.)
+  // ...
+
   private setupSpecificListeners(): void {
-    const searchBtn = this.view.getSearchButton();
-    if (searchBtn) {
-      searchBtn.addEventListener('click', () => console.log('[Home] Search clicked'));
-    }
-    const profileBtn = this.view.getProfileButton();
-    if (profileBtn) {
-      profileBtn.addEventListener('click', () => console.log('[Home] Profile clicked'));
-    }
-    const viewAllHistory = this.view.getViewAllHistoryButton();
-    if (viewAllHistory) {
-      viewAllHistory.addEventListener('click', async () => this.navigateToModule('history'));
-    }
-    const viewAllPatients = this.view.getViewAllPatientsButton();
-    if (viewAllPatients) {
-      viewAllPatients.addEventListener('click', async () => this.navigateToModule('patients'));
-    }
+    const searchBtn = this.view.getSearchButton()
+    if (searchBtn) searchBtn.addEventListener('click', () => console.log('[Home] Search clicked'))
+    const profileBtn = this.view.getProfileButton()
+    if (profileBtn) profileBtn.addEventListener('click', () => console.log('[Home] Profile clicked'))
+    const viewAllHistory = this.view.getViewAllHistoryButton()
+    if (viewAllHistory) viewAllHistory.addEventListener('click', async () => this.navigateToModule('history'))
+    const viewAllPatients = this.view.getViewAllPatientsButton()
+    if (viewAllPatients) viewAllPatients.addEventListener('click', async () => this.navigateToModule('patients'))
   }
 
   private setupElements(): void {

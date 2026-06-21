@@ -1,183 +1,84 @@
-<!DOCTYPE html>
-<html class="light" lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VetCalc Dashboard</title>
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Sans+3:wght@400;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Source+Sans+3:wght@100..900&display=swap" rel="stylesheet">
-  <script id="tailwind-config">
-    tailwind.config = {
-      darkMode: "class",
-      theme: {
-        extend: {
-          "colors": {
-            "on-tertiary-fixed-variant": "#544600",
-            "on-primary-fixed-variant": "#005312",
-            "on-surface-variant": "#40493d",
-            "tertiary": "#705d00",
-            "surface-container-low": "#e9f6fd",
-            "error": "#ba1a1a",
-            "on-secondary-fixed-variant": "#005313",
-            "on-tertiary-container": "#4c3e00",
-            "surface": "#f4faff",
-            "surface-container-highest": "#d7e4ec",
-            "surface-container-high": "#ddeaf2",
-            "inverse-surface": "#263238",
-            "secondary": "#006e1c",
-            "primary-fixed-dim": "#88d982",
-            "on-error-container": "#93000a",
-            "on-primary": "#ffffff",
-            "on-secondary-container": "#00731e",
-            "on-tertiary": "#ffffff",
-            "on-tertiary-fixed": "#221b00",
-            "surface-dim": "#cfdce4",
-            "surface-tint": "#1b6d24",
-            "on-background": "#111d23",
-            "outline": "#707a6c",
-            "secondary-fixed-dim": "#78dc77",
-            "inverse-primary": "#88d982",
-            "on-primary-container": "#cbffc2",
-            "primary": "#0d631b",
-            "outline-variant": "#bfcaba",
-            "tertiary-container": "#c9a900",
-            "tertiary-fixed": "#ffe16d",
-            "surface-bright": "#f4faff",
-            "on-error": "#ffffff",
-            "on-primary-fixed": "#002204",
-            "secondary-container": "#91f78e",
-            "surface-container": "#e3f0f8",
-            "surface-variant": "#d7e4ec",
-            "inverse-on-surface": "#e6f3fb",
-            "on-secondary-fixed": "#002204",
-            "on-surface": "#111d23",
-            "tertiary-fixed-dim": "#e9c400",
-            "surface-container-lowest": "#ffffff",
-            "primary-container": "#2e7d32",
-            "error-container": "#ffdad6",
-            "secondary-fixed": "#94f990",
-            "background": "#f4faff",
-            "on-secondary": "#ffffff",
-            "primary-fixed": "#a3f69c"
-          },
-          "borderRadius": {
-            "DEFAULT": "0.25rem",
-            "lg": "0.5rem",
-            "xl": "0.75rem",
-            "full": "9999px"
-          },
-          "spacing": {
-            "touch-target-min": "48px",
-            "base": "8px",
-            "stack-lg": "24px",
-            "gutter": "12px",
-            "container-padding": "16px",
-            "stack-sm": "4px",
-            "stack-md": "16px"
-          },
-          "fontFamily": {
-            "label-sm": ["Inter"],
-            "body-md": ["Source Sans 3"],
-            "headline-lg-mobile": ["Inter"],
-            "headline-lg": ["Inter"],
-            "label-md": ["Inter"],
-            "body-lg": ["Source Sans 3"],
-            "headline-md": ["Inter"],
-            "headline-xl": ["Inter"]
-          },
-          "fontSize": {
-            "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
-            "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
-            "headline-lg-mobile": ["22px", {"lineHeight": "28px", "fontWeight": "600"}],
-            "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
-            "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
-            "body-lg": ["18px", {"lineHeight": "26px", "fontWeight": "400"}],
-            "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
-            "headline-xl": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
-          }
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          // NUEVA PALETA
+          primary: '#F9A825',
+          'on-primary': '#FFFFFF',
+          secondary: '#00ACC1',
+          'on-secondary': '#FFFFFF',
+          tertiary: '#FF7043',
+          'on-tertiary': '#FFFFFF',
+          neutral: '#FDFBF7',
+          'on-neutral': '#1A1A1A',
+
+          // Mantén compatibilidad con clases como bg-surface, text-on-surface, etc.
+          surface: '#FDFBF7',
+          'surface-dim': '#e8e5dd',
+          'surface-bright': '#FDFBF7',
+          'surface-container-lowest': '#FFFFFF',
+          'surface-container-low': '#f5f5f0',
+          'surface-container': '#f0ede5',
+          'surface-container-high': '#e8e5dd',
+          'surface-container-highest': '#ddd9d0',
+          'on-surface': '#1A1A1A',
+          'on-surface-variant': '#5A5A5A',
+          'surface-variant': '#f0ede5',
+          'surface-tint': '#F9A825',
+          'outline': '#8a8a7a',
+          'outline-variant': '#c4c4b5',
+
+          // Mantén los colores de error y otros si los usas
+          error: '#BA1A1A',
+          'on-error': '#FFFFFF',
+          'error-container': '#FFDAD6',
+          'on-error-container': '#93000A',
+
+          // Fijos para el splash (no los cambies si no quieres)
+          'on-primary-fixed': '#F9A825',
+          'primary-fixed': '#F9A825',
+          'primary-fixed-dim': '#e09520',
+          'on-primary-fixed-variant': '#e09520',
+          // ... puedes agregar más si los usas
+        },
+        borderRadius: {
+          DEFAULT: '0.25rem',
+          lg: '0.5rem',
+          xl: '0.75rem',
+          full: '9999px'
+        },
+        spacing: {
+          'touch-target-min': '48px',
+          base: '8px',
+          'stack-lg': '24px',
+          gutter: '12px',
+          'container-padding': '16px',
+          'stack-sm': '4px',
+          'stack-md': '16px'
+        },
+        fontFamily: {
+          'label-sm': ['Inter'],
+          'body-md': ['Source Sans 3'],
+          'headline-lg-mobile': ['Inter'],
+          'headline-lg': ['Inter'],
+          'label-md': ['Inter'],
+          'body-lg': ['Source Sans 3'],
+          'headline-md': ['Inter'],
+          'headline-xl': ['Inter']
+        },
+        fontSize: {
+          'label-sm': ['12px', { lineHeight: '16px', fontWeight: '600' }],
+          'body-md': ['16px', { lineHeight: '24px', fontWeight: '400' }],
+          'headline-lg-mobile': ['22px', { lineHeight: '28px', fontWeight: '600' }],
+          'headline-lg': ['24px', { lineHeight: '32px', letterSpacing: '-0.01em', fontWeight: '600' }],
+          'label-md': ['14px', { lineHeight: '20px', letterSpacing: '0.01em', fontWeight: '500' }],
+          'body-lg': ['18px', { lineHeight: '26px', fontWeight: '400' }],
+          'headline-md': ['20px', { lineHeight: '28px', fontWeight: '600' }],
+          'headline-xl': ['32px', { lineHeight: '40px', letterSpacing: '-0.02em', fontWeight: '700' }]
         }
       }
     }
-  </script>
-  <style>
-    .material-symbols-outlined {
-      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-    }
-    body {
-      background-color: #f4faff;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .bento-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-    }
-    @media (min-width: 768px) {
-      .bento-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-    .glass-card {
-      background: rgba(255, 255, 255, 0.8);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-    }
-    .ripple {
-      position: absolute;
-      background: rgba(13, 99, 27, 0.1);
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-      border-radius: 50%;
-      animation: ripple-animation 0.6s linear;
-    }
-    @keyframes ripple-animation {
-      from { width: 0px; height: 0px; opacity: 0.5; }
-      to { width: 400px; height: 400px; opacity: 0; }
-    }
-    .pb-safe {
-      padding-bottom: env(safe-area-inset-bottom);
-    }
-    /* Estilos adicionales para el splash (fondo verde) */
-    .splash-body {
-      background-color: #2e7d32 !important;
-      overflow: hidden;
-    }
-    .vet-pattern {
-      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 10c-1.1 0-2 .9-2 2v4h-4c-1.1 0-2 .9-2 2s.9 2 2 2h4v4c0 1.1.9 2 2 2s2-.9 2-2v-4h4c1.1 0 2-.9 2-2s-.9-2-2-2h-4v-4c0-1.1-.9-2-2-2zM10 40c-1.1 0-2 .9-2 2v4h-4c-1.1 0-2 .9-2 2s.9 2 2 2h4v4c0 1.1.9 2 2 2s2-.9 2-2v-4h4c1.1 0 2-.9 2-2s-.9-2-2-2h-4v-4c0-1.1-.9-2-2-2z' fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
-    }
-    .spinner-ring {
-      border: 3px solid rgba(255, 255, 255, 0.2);
-      border-top: 3px solid #ffffff;
-      border-radius: 50%;
-      width: 32px;
-      height: 32px;
-      animation: spin-slow 1s linear infinite;
-    }
-    @keyframes spin-slow {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-    @keyframes pulse-soft {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.02); opacity: 0.95; }
-    }
-    .animate-brand-pulse {
-      animation: pulse-soft 3s ease-in-out infinite;
-    }
-  </style>
-  <style>
-    body {
-      min-height: max(884px, 100dvh);
-    }
-  </style>
-  <!-- PWA manifest -->
-  <link rel="manifest" href="/manifest.webmanifest" />
-  <link rel="apple-touch-icon" href="/icons/icon-192.png" />
-  <script type="module" crossorigin src="/assets/index-zZyiJWFp.js"></script>
-<link rel="manifest" href="/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/registerSW.js"></script></head>
-<body class="font-body-md text-on-surface mb-24">
-  <div id="app"></div>
-</body>
-</html>
+  }
+</script>
