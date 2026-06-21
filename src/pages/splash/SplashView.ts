@@ -9,8 +9,8 @@ export class SplashView {
     if (appElement) {
       appElement.innerHTML = SplashTemplate
     }
-    // Añadir clase para fondo verde y overflow hidden
-    document.body.classList.add('splash-body')
+    // ❌ ELIMINA O COMENTA ESTA LÍNEA:
+    // document.body.classList.add('splash-body')
     this.setupElements()
   }
   
