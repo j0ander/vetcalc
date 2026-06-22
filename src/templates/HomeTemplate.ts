@@ -1,28 +1,19 @@
 export const HomeTemplate = `
-<!-- ===== DECORACIÓN DE FONDO CON IMÁGENES REALES ===== -->
-<div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
-
-  <!-- Imagen mediana - esquina superior izquierda -->
-  <img 
-    src="/icons/Animales/a15.png" 
-    alt="" 
-    class="absolute -left-6 -top-10 w-28 md:w-52 opacity-20 select-none"
-  />
-
-  <!-- Imagen mediana - esquina inferior derecha -->
-  <img 
-    src="/icons/Animales/a2.png" 
-    alt="" 
-    class="absolute -right-6 -bottom-10 w-24 md:w-48 opacity-20 select-none"
-  />
-
-  <!-- Imagen grande - centrada (detrás del contenido) -->
-  <img 
-    src="/icons/Animales/a3.png" 
-    alt="" 
-    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 md:w-96 opacity-15 select-none"
-  />
-
+<!-- ===== FONDO CON TEXTURA Y TONO MÁS OSCURO ===== -->
+<div class="fixed inset-0 pointer-events-none z-0">
+  <!-- Patrón de puntos más grande y oscuro -->
+  <div class="w-full h-full" style="
+    background-image: radial-gradient(rgba(0,0,0,0.08) 1.5px, transparent 1.5px);
+    background-size: 24px 24px;
+  "></div>
+  <!-- Capa oscura para dar más profundidad -->
+  <div class="absolute inset-0 bg-black/5"></div>
+  <!-- Degradado suave -->
+  <div class="absolute inset-0 bg-gradient-to-b from-surface/30 to-surface/80"></div>
+  <!-- Imágenes decorativas -->
+  <img src="/icons/Animales/a15.png" alt="" class="absolute -left-6 -top-10 w-28 md:w-52 opacity-20 select-none" />
+  <img src="/icons/Animales/a2.png" alt="" class="absolute -right-6 -bottom-10 w-24 md:w-48 opacity-20 select-none" />
+  <img src="/icons/Animales/a3.png" alt="" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 md:w-96 opacity-15 select-none" />
 </div>
 
 <!-- ===== HEADER ===== -->
@@ -30,6 +21,19 @@ export const HomeTemplate = `
   <div class="flex items-center gap-2">
     <span class="material-symbols-outlined text-primary animate-pulse-soft">pets</span>
     <h1 class="font-headline-md text-headline-md font-bold text-primary">VetCalc</h1>
+    <!-- Redes sociales -->
+    <a href="https://www.instagram.com/vetcalcapp/" target="_blank" rel="noopener noreferrer" 
+       class="p-1.5 rounded-full hover:bg-surface-container-high transition-all hover:scale-110 hover:rotate-6 duration-200 ml-2">
+      <svg class="w-4 h-4 text-secondary" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1112.324 0 6.162 6.162 0 01-12.324 0zM12 16a4 4 0 110-8 4 4 0 010 8zm4.965-10.405a1.44 1.44 0 112.881.001 1.44 1.44 0 01-2.881-.001z"/>
+      </svg>
+    </a>
+    <a href="https://www.facebook.com/people/VetCalc-App/pfbid0LmJ1sqYCcNVU9TdFeK5U1eztC47b4V9LhwqEmvo9v5mRf69inDfqqsxbgUGufkX1l/?rdid=JpWaH8m1VvU3q37c&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1DAN4LzRnB%2F" target="_blank" rel="noopener noreferrer" 
+       class="p-1.5 rounded-full hover:bg-surface-container-high transition-all hover:scale-110 hover:-rotate-6 duration-200">
+      <svg class="w-4 h-4 text-secondary" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+      </svg>
+    </a>
   </div>
   <div class="flex items-center gap-4">
     <button class="p-2 rounded-full hover:bg-surface-container-high transition-colors">
@@ -47,12 +51,10 @@ export const HomeTemplate = `
 
 <main class="relative z-10 px-container-padding pt-6 space-y-stack-lg pb-24">
 
-  <!-- ===== BANNER CON IMAGEN DE FONDO ===== -->
-  <section class="relative w-full rounded-2xl overflow-hidden shadow-elevated animate-fade-in-up group min-h-[160px] md:min-h-[200px]"
+  <!-- ===== BANNER ===== -->
+  <section class="relative w-full rounded-2xl overflow-hidden shadow-elevated animate-fade-in-up group min-h-[160px] md:min-h-[425px]"
            style="background-image: url('/icons/Animales/a3.png'); background-size: cover; background-position: center;">
-    <!-- Superposición con gradiente -->
     <div class="absolute inset-0 bg-gradient-to-r from-primary/70 to-secondary/70 mix-blend-multiply"></div>
-    <!-- Contenido -->
     <div class="absolute inset-0 flex flex-col justify-center px-6 text-white">
       <h2 class="font-headline-lg text-headline-lg md:text-headline-xl drop-shadow-md">Bienvenido, Dr. Smith</h2>
       <p class="font-body-md text-body-md opacity-90">Panel clínico • Hoy tienes 4 pacientes agendados</p>
@@ -77,10 +79,10 @@ export const HomeTemplate = `
     </div>
   </section>
 
-  <!-- ===== CUADRÍCULA DE MÓDULOS (animación escalonada) ===== -->
+  <!-- ===== CUADRÍCULA DE MÓDULOS CON RAYAS ANIMADAS ===== -->
   <div class="bento-grid">
-    <!-- Fluidoterapia -->
-    <button class="glass-card p-5 rounded-xl shadow-sm flex flex-col items-start gap-4 active:scale-95 transition-all duration-300 hover:shadow-elevated hover:-translate-y-1 text-left border-l-4 border-l-primary group animate-fade-in-up" data-route="fluidotherapy" style="animation-delay: 50ms;">
+    <!-- Fluidoterapia (raya primary) -->
+    <button class="glass-card p-5 rounded-xl shadow-sm flex flex-col items-start gap-4 active:scale-95 transition-all duration-300 hover:shadow-2xl hover:-translate-y-4 hover:scale-[1.04] text-left border-l-4 border-l-primary group animate-fade-in-up hover:border-l-8" data-route="fluidotherapy" style="animation-delay: 50ms;">
       <div class="p-3 bg-secondary-container rounded-lg text-on-secondary-container group-hover:bg-primary group-hover:text-white transition-colors">
         <span class="material-symbols-outlined text-3xl">water_drop</span>
       </div>
@@ -90,8 +92,8 @@ export const HomeTemplate = `
       </div>
     </button>
 
-    <!-- Calculadora de Dosis -->
-    <button class="glass-card p-5 rounded-xl shadow-sm flex flex-col items-start gap-4 active:scale-95 transition-all duration-300 hover:shadow-elevated hover:-translate-y-1 text-left group animate-fade-in-up" data-route="dosage" style="animation-delay: 100ms;">
+    <!-- Calculadora de Dosis (raya secondary) -->
+    <button class="glass-card p-5 rounded-xl shadow-sm flex flex-col items-start gap-4 active:scale-95 transition-all duration-300 hover:shadow-2xl hover:-translate-y-4 hover:scale-[1.04] text-left border-l-4 border-l-primary group animate-fade-in-up hover:border-l-8" data-route="dosage" style="animation-delay: 100ms;">
       <div class="p-3 bg-secondary-container rounded-lg text-on-secondary-container group-hover:bg-primary group-hover:text-white transition-colors">
         <span class="material-symbols-outlined text-3xl">medication</span>
       </div>
@@ -101,8 +103,8 @@ export const HomeTemplate = `
       </div>
     </button>
 
-    <!-- Anestesia (Premium) -->
-    <button class="glass-card p-5 rounded-xl shadow-sm flex flex-col items-start gap-4 active:scale-95 transition-all duration-300 hover:shadow-elevated hover:-translate-y-1 text-left relative border-2 border-tertiary/20 bg-gradient-to-br from-surface to-tertiary-container/10 group animate-fade-in-up" data-route="anesthesia" style="animation-delay: 150ms;">
+    <!-- Anestesia (raya tertiary) -->
+    <button class="glass-card p-5 rounded-xl shadow-sm flex flex-col items-start gap-4 active:scale-95 transition-all duration-300 hover:shadow-2xl hover:-translate-y-4 hover:scale-[1.04] text-left relative border-2 border-tertiary/20 bg-gradient-to-br from-surface to-tertiary-container/10 group animate-fade-in-up border-l-4 border-l-tertiary hover:border-l-8" data-route="anesthesia" style="animation-delay: 150ms;">
       <div class="absolute top-4 right-4">
         <span class="material-symbols-outlined text-tertiary animate-pulse-soft" style="font-variation-settings: 'FILL' 1;">crown</span>
       </div>
@@ -115,9 +117,9 @@ export const HomeTemplate = `
       </div>
     </button>
 
-    <!-- Convertidor -->
-    <button class="glass-card p-5 rounded-xl shadow-sm flex flex-col items-start gap-4 active:scale-95 transition-all duration-300 hover:shadow-elevated hover:-translate-y-1 text-left group animate-fade-in-up" data-route="converter" style="animation-delay: 200ms;">
-      <div class="p-3 bg-secondary-container rounded-lg text-on-secondary-container group-hover:bg-primary group-hover:text-white transition-colors">
+    <!-- Convertidor (raya primary) -->
+    <button class="glass-card p-5 rounded-xl shadow-sm flex flex-col items-start gap-4 active:scale-95 transition-all duration-300 hover:shadow-2xl hover:-translate-y-4 hover:scale-[1.04] text-left border-l-4 border-l-secondary group animate-fade-in-up hover:border-l-8" data-route="converter" style="animation-delay: 200ms;">
+      <div class="p-3 bg-secondary-container rounded-lg text-on-secondary-container group-hover:bg-secondary group-hover:text-white transition-colors">
         <span class="material-symbols-outlined text-3xl">sync_alt</span>
       </div>
       <div>
@@ -126,9 +128,9 @@ export const HomeTemplate = `
       </div>
     </button>
 
-    <!-- Biblioteca -->
-    <button class="glass-card p-5 rounded-xl shadow-sm flex flex-col items-start gap-4 active:scale-95 transition-all duration-300 hover:shadow-elevated hover:-translate-y-1 text-left group animate-fade-in-up" data-route="library" style="animation-delay: 250ms;">
-      <div class="p-3 bg-surface-container-highest rounded-lg text-on-surface-variant group-hover:bg-primary group-hover:text-white transition-colors">
+    <!-- Biblioteca (raya neutral) -->
+    <button class="glass-card p-5 rounded-xl shadow-sm flex flex-col items-start gap-4 active:scale-95 transition-all duration-300 hover:shadow-2xl hover:-translate-y-4 hover:scale-[1.04] text-left border-l-4 border-l-secondary group animate-fade-in-up hover:border-l-8" data-route="library" style="animation-delay: 250ms;">
+      <div class="p-3 bg-surface-container-highest rounded-lg text-on-surface-variant group-hover:bg-secondary group-hover:text-white transition-colors">
         <span class="material-symbols-outlined text-3xl">menu_book</span>
       </div>
       <div>
@@ -137,9 +139,9 @@ export const HomeTemplate = `
       </div>
     </button>
 
-    <!-- Pacientes -->
-    <button class="glass-card p-5 rounded-xl shadow-sm flex flex-col items-start gap-4 active:scale-95 transition-all duration-300 hover:shadow-elevated hover:-translate-y-1 text-left group animate-fade-in-up" data-route="patients" style="animation-delay: 300ms;">
-      <div class="p-3 bg-surface-container-highest rounded-lg text-on-surface-variant group-hover:bg-primary group-hover:text-white transition-colors">
+    <!-- Pacientes (raya secondary) -->
+    <button class="glass-card p-5 rounded-xl shadow-sm flex flex-col items-start gap-4 active:scale-95 transition-all duration-300 hover:shadow-2xl hover:-translate-y-4 hover:scale-[1.04] text-left border-l-4 border-l-secondary group animate-fade-in-up hover:border-l-8" data-route="patients" style="animation-delay: 300ms;">
+      <div class="p-3 bg-surface-container-highest rounded-lg text-on-surface-variant group-hover:bg-secondary group-hover:text-white transition-colors">
         <span class="material-symbols-outlined text-3xl">pets</span>
       </div>
       <div>
@@ -149,25 +151,34 @@ export const HomeTemplate = `
     </button>
   </div>
 
-  <!-- ===== HISTORIAL RECIENTE ===== -->
-  <section class="space-y-stack-md animate-fade-in-up" style="animation-delay: 350ms;">
+  <!-- ===== HISTORIAL RECIENTE (con transparencia mínima) ===== -->
+<section class="bg-white/80 backdrop-blur-sm rounded-2xl border border-outline-variant shadow-md p-4 space-y-4">
+  <div>
     <div class="flex justify-between items-center">
       <h3 class="font-headline-md text-headline-md text-on-surface">Historial Reciente</h3>
       <button class="text-primary font-label-md text-label-md hover:underline transition-all hover:scale-105" id="view-all-history">Ver todos</button>
     </div>
-    <div class="space-y-3" id="recent-history-container"></div>
-  </section>
+    <!-- Línea horizontal color secundario -->
+    <hr class="mt-2 border-t-2 border-secondary" />
+  </div>
+  <div class="space-y-3" id="recent-history-container"></div>
+</section>
 
-  <!-- ===== PACIENTES RECIENTES ===== -->
-  <section id="recent-patients-section" class="space-y-stack-md animate-fade-in-up" style="animation-delay: 400ms; display: none;">
+<!-- ===== PACIENTES RECIENTES (con transparencia mínima) ===== -->
+<section id="recent-patients-section" class="bg-white/80 backdrop-blur-sm rounded-2xl border border-outline-variant shadow-md p-4 space-y-4" style="display: none;">
+  <div>
     <div class="flex justify-between items-center">
       <h3 class="font-headline-md text-headline-md text-on-surface">Pacientes Recientes</h3>
       <button class="text-primary font-label-md text-label-md hover:underline transition-all hover:scale-105" id="view-all-patients">Ver todos</button>
     </div>
-    <div class="space-y-3" id="recent-patients-container"></div>
-  </section>
+    <!-- Línea horizontal color secundario -->
+    <hr class="mt-2 border-t-2 border-secondary" />
+  </div>
+  <div class="space-y-3" id="recent-patients-container"></div>
+</section>
 
-  <!-- ===== CONSEJO DEL DÍA CON IMAGEN DE FONDO ===== -->
+
+  <!-- ===== CONSEJO DEL DÍA ===== -->
   <section class="w-full rounded-2xl overflow-hidden relative group shadow-elevated animate-fade-in-up min-h-[180px]" style="animation-delay: 450ms; background-image: url('/icons/Animales/a14.png'); background-size: cover; background-position: center;">
     <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
     <div class="absolute bottom-4 left-4 right-4 p-4 glass-card rounded-xl backdrop-blur-sm">
