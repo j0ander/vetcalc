@@ -1,13 +1,8 @@
 export const LoginTemplate = `
-<!-- ===== FONDO CON TEXTURA E IMÁGENES DECORATIVAS (igual que Home) ===== -->
+<!-- ===== FONTO IGUAL AL SPLASH ===== -->
 <div class="fixed inset-0 pointer-events-none z-0">
-  <!-- Patrón de puntos -->
-  <div class="w-full h-full bg-neutral" style="
-    background-image: radial-gradient(rgba(0,0,0,0.06) 1.5px, transparent 1.5px);
-    background-size: 24px 24px;
-  "></div>
-  <!-- Capa para dar profundidad -->
-  <div class="absolute inset-0 bg-black/5"></div>
+  <!-- Fondo base neutral -->
+  <div class="w-full h-full bg-neutral"></div>
   <!-- Patrón de huellas (vet-pattern) -->
   <div class="absolute inset-0 vet-pattern opacity-30"></div>
   <!-- Imágenes decorativas -->
