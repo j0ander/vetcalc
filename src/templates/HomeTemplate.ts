@@ -1,16 +1,13 @@
 export const HomeTemplate = `
-<!-- ===== FONDO CON TEXTURA Y TONO MÁS OSCURO ===== -->
+<!-- ===== FONDO CON ESTILO SPLASH (bg-neutral + vet-pattern) ===== -->
 <div class="fixed inset-0 pointer-events-none z-0">
-  <!-- Patrón de puntos más grande y oscuro -->
-  <div class="w-full h-full" style="
-    background-image: radial-gradient(rgba(0,0,0,0.08) 1.5px, transparent 1.5px);
-    background-size: 24px 24px;
-  "></div>
-  <!-- Capa oscura para dar más profundidad -->
+  <!-- Fondo neutro (igual que splash) -->
+  <div class="absolute inset-0 bg-neutral"></div>
+  <!-- Patrón de huellas de fondo -->
+  <div class="absolute inset-0 vet-pattern"></div>
+  <!-- Capa oscura sutil (opcional) -->
   <div class="absolute inset-0 bg-black/5"></div>
-  <!-- Degradado suave -->
-  <div class="absolute inset-0 bg-gradient-to-b from-surface/30 to-surface/80"></div>
-  <!-- Imágenes decorativas -->
+  <!-- Imágenes decorativas (mantenidas) -->
   <img src="/icons/Animales/a15.png" alt="" class="absolute -left-6 -top-10 w-28 md:w-52 opacity-20 select-none" />
   <img src="/icons/Animales/a2.png" alt="" class="absolute -right-6 -bottom-10 w-24 md:w-48 opacity-20 select-none" />
   <img src="/icons/Animales/a3.png" alt="" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 md:w-96 opacity-15 select-none" />
@@ -81,7 +78,7 @@ export const HomeTemplate = `
 
   <!-- ===== CUADRÍCULA DE MÓDULOS CON RAYAS ANIMADAS ===== -->
   <div class="bento-grid">
-    <!-- Fluidoterapia (raya primary) -->
+    <!-- Fluidoterapia -->
     <button class="glass-card p-5 rounded-xl shadow-sm flex flex-col items-start gap-4 active:scale-95 transition-all duration-300 hover:shadow-2xl hover:-translate-y-4 hover:scale-[1.04] text-left border-l-4 border-l-primary group animate-fade-in-up hover:border-l-8" data-route="fluidotherapy" style="animation-delay: 50ms;">
       <div class="p-3 bg-secondary-container rounded-lg text-on-secondary-container group-hover:bg-primary group-hover:text-white transition-colors">
         <span class="material-symbols-outlined text-3xl">water_drop</span>
@@ -92,7 +89,7 @@ export const HomeTemplate = `
       </div>
     </button>
 
-    <!-- Calculadora de Dosis (raya secondary) -->
+    <!-- Calculadora de Dosis -->
     <button class="glass-card p-5 rounded-xl shadow-sm flex flex-col items-start gap-4 active:scale-95 transition-all duration-300 hover:shadow-2xl hover:-translate-y-4 hover:scale-[1.04] text-left border-l-4 border-l-primary group animate-fade-in-up hover:border-l-8" data-route="dosage" style="animation-delay: 100ms;">
       <div class="p-3 bg-secondary-container rounded-lg text-on-secondary-container group-hover:bg-primary group-hover:text-white transition-colors">
         <span class="material-symbols-outlined text-3xl">medication</span>
@@ -103,7 +100,7 @@ export const HomeTemplate = `
       </div>
     </button>
 
-    <!-- Anestesia (raya tertiary) -->
+    <!-- Anestesia -->
     <button class="glass-card p-5 rounded-xl shadow-sm flex flex-col items-start gap-4 active:scale-95 transition-all duration-300 hover:shadow-2xl hover:-translate-y-4 hover:scale-[1.04] text-left relative border-2 border-tertiary/20 bg-gradient-to-br from-surface to-tertiary-container/10 group animate-fade-in-up border-l-4 border-l-tertiary hover:border-l-8" data-route="anesthesia" style="animation-delay: 150ms;">
       <div class="absolute top-4 right-4">
         <span class="material-symbols-outlined text-tertiary animate-pulse-soft" style="font-variation-settings: 'FILL' 1;">crown</span>
@@ -117,7 +114,7 @@ export const HomeTemplate = `
       </div>
     </button>
 
-    <!-- Convertidor (raya primary) -->
+    <!-- Convertidor -->
     <button class="glass-card p-5 rounded-xl shadow-sm flex flex-col items-start gap-4 active:scale-95 transition-all duration-300 hover:shadow-2xl hover:-translate-y-4 hover:scale-[1.04] text-left border-l-4 border-l-secondary group animate-fade-in-up hover:border-l-8" data-route="converter" style="animation-delay: 200ms;">
       <div class="p-3 bg-secondary-container rounded-lg text-on-secondary-container group-hover:bg-secondary group-hover:text-white transition-colors">
         <span class="material-symbols-outlined text-3xl">sync_alt</span>
@@ -128,7 +125,7 @@ export const HomeTemplate = `
       </div>
     </button>
 
-    <!-- Biblioteca (raya neutral) -->
+    <!-- Biblioteca -->
     <button class="glass-card p-5 rounded-xl shadow-sm flex flex-col items-start gap-4 active:scale-95 transition-all duration-300 hover:shadow-2xl hover:-translate-y-4 hover:scale-[1.04] text-left border-l-4 border-l-secondary group animate-fade-in-up hover:border-l-8" data-route="library" style="animation-delay: 250ms;">
       <div class="p-3 bg-surface-container-highest rounded-lg text-on-surface-variant group-hover:bg-secondary group-hover:text-white transition-colors">
         <span class="material-symbols-outlined text-3xl">menu_book</span>
@@ -139,7 +136,7 @@ export const HomeTemplate = `
       </div>
     </button>
 
-    <!-- Pacientes (raya secondary) -->
+    <!-- Pacientes -->
     <button class="glass-card p-5 rounded-xl shadow-sm flex flex-col items-start gap-4 active:scale-95 transition-all duration-300 hover:shadow-2xl hover:-translate-y-4 hover:scale-[1.04] text-left border-l-4 border-l-secondary group animate-fade-in-up hover:border-l-8" data-route="patients" style="animation-delay: 300ms;">
       <div class="p-3 bg-surface-container-highest rounded-lg text-on-surface-variant group-hover:bg-secondary group-hover:text-white transition-colors">
         <span class="material-symbols-outlined text-3xl">pets</span>
@@ -151,32 +148,29 @@ export const HomeTemplate = `
     </button>
   </div>
 
-  <!-- ===== HISTORIAL RECIENTE (con transparencia mínima) ===== -->
-<section class="bg-white/80 backdrop-blur-sm rounded-2xl border border-outline-variant shadow-md p-4 space-y-4">
-  <div>
-    <div class="flex justify-between items-center">
-      <h3 class="font-headline-md text-headline-md text-on-surface">Historial Reciente</h3>
-      <button class="text-primary font-label-md text-label-md hover:underline transition-all hover:scale-105" id="view-all-history">Ver todos</button>
+  <!-- ===== HISTORIAL RECIENTE ===== -->
+  <section class="bg-white/80 backdrop-blur-sm rounded-2xl border border-outline-variant shadow-md p-4 space-y-4">
+    <div>
+      <div class="flex justify-between items-center">
+        <h3 class="font-headline-md text-headline-md text-on-surface">Historial Reciente</h3>
+        <button class="text-primary font-label-md text-label-md hover:underline transition-all hover:scale-105" id="view-all-history">Ver todos</button>
+      </div>
+      <hr class="mt-2 border-t-2 border-secondary" />
     </div>
-    <!-- Línea horizontal color secundario -->
-    <hr class="mt-2 border-t-2 border-secondary" />
-  </div>
-  <div class="space-y-3" id="recent-history-container"></div>
-</section>
+    <div class="space-y-3" id="recent-history-container"></div>
+  </section>
 
-<!-- ===== PACIENTES RECIENTES (con transparencia mínima) ===== -->
-<section id="recent-patients-section" class="bg-white/80 backdrop-blur-sm rounded-2xl border border-outline-variant shadow-md p-4 space-y-4" style="display: none;">
-  <div>
-    <div class="flex justify-between items-center">
-      <h3 class="font-headline-md text-headline-md text-on-surface">Pacientes Recientes</h3>
-      <button class="text-primary font-label-md text-label-md hover:underline transition-all hover:scale-105" id="view-all-patients">Ver todos</button>
+  <!-- ===== PACIENTES RECIENTES ===== -->
+  <section id="recent-patients-section" class="bg-white/80 backdrop-blur-sm rounded-2xl border border-outline-variant shadow-md p-4 space-y-4" style="display: none;">
+    <div>
+      <div class="flex justify-between items-center">
+        <h3 class="font-headline-md text-headline-md text-on-surface">Pacientes Recientes</h3>
+        <button class="text-primary font-label-md text-label-md hover:underline transition-all hover:scale-105" id="view-all-patients">Ver todos</button>
+      </div>
+      <hr class="mt-2 border-t-2 border-secondary" />
     </div>
-    <!-- Línea horizontal color secundario -->
-    <hr class="mt-2 border-t-2 border-secondary" />
-  </div>
-  <div class="space-y-3" id="recent-patients-container"></div>
-</section>
-
+    <div class="space-y-3" id="recent-patients-container"></div>
+  </section>
 
   <!-- ===== CONSEJO DEL DÍA ===== -->
   <section class="w-full rounded-2xl overflow-hidden relative group shadow-elevated animate-fade-in-up min-h-[180px]" style="animation-delay: 450ms; background-image: url('/icons/Animales/a14.png'); background-size: cover; background-position: center;">
