@@ -19,6 +19,12 @@ export class AnesthesiaView {
   private totalFluidsEl: HTMLElement | null = null;
   private finalizeBtn: HTMLElement | null = null;
   private printBtn: HTMLElement | null = null;
+  private expandBtn: HTMLElement | null = null;
+  private detailsPanel: HTMLElement | null = null;
+  private detailWeight: HTMLElement | null = null;
+  private detailAsa: HTMLElement | null = null;
+  private detailDrugs: HTMLElement | null = null;
+  private detailFluids: HTMLElement | null = null;
 
   render(): void {
     const app = document.getElementById('app');
@@ -38,6 +44,12 @@ export class AnesthesiaView {
     this.totalFluidsEl = document.getElementById('total-fluids');
     this.finalizeBtn = document.getElementById('finalize-btn');
     this.printBtn = document.getElementById('print-pdf-btn');
+    this.expandBtn = document.getElementById('expand-details-btn');
+    this.detailsPanel = document.getElementById('details-panel');
+    this.detailWeight = document.getElementById('detail-weight');
+    this.detailAsa = document.getElementById('detail-asa');
+    this.detailDrugs = document.getElementById('detail-drugs');
+    this.detailFluids = document.getElementById('detail-fluids');
   }
 
   // Getters para elementos dinámicos
@@ -47,8 +59,10 @@ export class AnesthesiaView {
   getTotalFluidsEl(): HTMLElement | null { return this.totalFluidsEl; }
   getFinalizeBtn(): HTMLElement | null { return this.finalizeBtn; }
   getPrintBtn(): HTMLElement | null { return this.printBtn; }
+  getExpandBtn(): HTMLElement | null { return this.expandBtn; }
+  getDetailsPanel(): HTMLElement | null { return this.detailsPanel; }
 
-  // Actualizar datos del paciente (mock o real)
+  // Actualizar datos del paciente
   updatePatientInfo(species: string, breed: string, weightKg: number, asa: string): void {
     if (this.patientDetailsEl) {
       this.patientDetailsEl.textContent = `${species} • ${breed} • ${weightKg} kg`;
@@ -61,16 +75,25 @@ export class AnesthesiaView {
     }
   }
 
-  // Renderizar lista de fármacos en una sección
+  // Actualizar el panel de detalles expandible
+  updateDetailPanel(weightKg: number, asa: string, totalDrugs: number, totalFluids: number): void {
+    if (this.detailWeight) this.detailWeight.textContent = `${weightKg} kg`;
+    if (this.detailAsa) this.detailAsa.textContent = asa;
+    if (this.detailDrugs) this.detailDrugs.textContent = totalDrugs.toString();
+    if (this.detailFluids) this.detailFluids.textContent = `${totalFluids.toFixed(1)} mL`;
+  }
+
+  // Renderizar lista de fármacos (actualizado con nuevas clases)
   renderDrugList(
     container: HTMLElement,
     drugs: Drug[],
-    onToggle: (drugName: string, selected: boolean) => void
+    onToggle: (drugName: string, selected: boolean) => void,
+    weightKg: number
   ): void {
     container.innerHTML = '';
     for (const drug of drugs) {
       const card = document.createElement('label');
-      card.className = `flex items-center gap-4 bg-surface-container-lowest p-4 rounded-xl border shadow-sm hover:border-primary cursor-pointer transition-all ${drug.selected ? 'border-primary' : 'border-outline-variant'}`;
+      card.className = `flex items-center gap-4 bg-white/80 backdrop-blur-sm p-4 rounded-2xl border shadow-sm hover:shadow-md cursor-pointer transition-all ${drug.selected ? 'border-primary' : 'border-outline-variant'}`;
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
       checkbox.checked = drug.selected;
@@ -80,10 +103,10 @@ export class AnesthesiaView {
         onToggle(drug.name, isChecked);
         if (isChecked) {
           card.classList.add('border-primary');
-          card.classList.remove('opacity-60');
+          card.classList.remove('opacity-80');
         } else {
           card.classList.remove('border-primary');
-          card.classList.add('opacity-60');
+          card.classList.add('opacity-80');
         }
       });
       // Info del fármaco
@@ -91,16 +114,16 @@ export class AnesthesiaView {
       infoDiv.className = 'flex-grow';
       infoDiv.innerHTML = `
         <div class="flex justify-between">
-          <span class="font-label-md text-label-md text-on-surface">${drug.name}</span>
+          <span class="font-label-md text-label-md text-on-surface font-semibold">${drug.name}</span>
           <span class="font-label-sm text-label-sm text-outline">${drug.dosePerKg} mg/kg</span>
         </div>
         <p class="font-body-md text-on-surface-variant">${drug.category === 'premed' ? 'Sedante / Analgésico' : 'Agente de inducción'}</p>
       `;
-      // Valores calculados (se actualizan dinámicamente con el peso)
+      // Valores calculados
       const valuesDiv = document.createElement('div');
       valuesDiv.className = 'text-right';
       valuesDiv.id = `drug-values-${drug.name.replace(/\s/g, '')}`;
-      this.updateDrugValuesUI(valuesDiv, drug, 28.5); // peso por defecto, se actualizará después
+      this.updateDrugValuesUI(valuesDiv, drug, weightKg);
       card.appendChild(checkbox);
       card.appendChild(infoDiv);
       card.appendChild(valuesDiv);
@@ -117,7 +140,7 @@ export class AnesthesiaView {
     `;
   }
 
-  // Renderizar tabla resumen
+  // Renderizar tabla resumen (actualizado con nuevas clases)
   renderSummary(drugs: Drug[], weightKg: number, totalFluids: number): void {
     if (!this.summaryBodyEl) return;
     this.summaryBodyEl.innerHTML = '';
@@ -126,10 +149,10 @@ export class AnesthesiaView {
       const totalMg = drug.dosePerKg * weightKg;
       const volumeMl = totalMg / drug.concentration;
       const row = document.createElement('tr');
-      row.className = 'divide-y divide-outline-variant';
+      row.className = 'border-b border-outline-variant/30 hover:bg-surface-container/20 transition-colors';
       row.innerHTML = `
         <td class="p-4">
-          <p class="font-label-md text-label-md">${drug.name}</p>
+          <p class="font-label-md text-label-md text-on-surface font-semibold">${drug.name}</p>
           <p class="text-[10px] text-outline uppercase tracking-wider">${drug.category === 'premed' ? 'Premedicación' : 'Inducción'}</p>
         </td>
         <td class="p-4 font-body-md">${totalMg.toFixed(2)} mg</td>
@@ -141,6 +164,4 @@ export class AnesthesiaView {
       this.totalFluidsEl.textContent = `${totalFluids.toFixed(1)} mL`;
     }
   }
-
-  // Método para limpiar listeners si es necesario (destroy)
 }

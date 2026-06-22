@@ -186,27 +186,40 @@ export const HomeTemplate = `
 
 </main>
 
-<!-- ===== BARRA DE NAVEGACIÓN INFERIOR ===== -->
-<nav class="fixed bottom-0 left-0 right-0 flex justify-around items-center px-2 pb-safe bg-surface dark:bg-surface h-[64px] z-50 shadow-[0px_-2px_8px_rgba(38,50,56,0.08)]">
-  <a class="flex flex-col items-center justify-center text-primary font-bold border-t-2 border-primary pt-2 active:scale-95 transition-transform duration-150" href="#" data-route="home">
-    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
-    <span class="font-label-sm text-label-sm">Inicio</span>
+<!-- ===== BARRA DE NAVEGACIÓN INFERIOR CON ANIMACIONES MEJORADAS ===== -->
+<nav class="fixed bottom-0 left-0 right-0 flex justify-around items-center px-2 pb-safe bg-surface/90 backdrop-blur-sm dark:bg-surface h-[68px] z-50 shadow-[0px_-4px_20px_rgba(0,0,0,0.06)]">
+  
+  <!-- Inicio (activo) -->
+  <a class="flex flex-col items-center justify-center text-primary font-bold border-t-2 border-primary pt-2 -translate-y-1 shadow-sm transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-md active:scale-95 group" href="#" data-route="home">
+    <span class="material-symbols-outlined transition-transform duration-300 group-hover:scale-110" style="font-variation-settings: 'FILL' 1;">home</span>
+    <span class="font-label-sm text-label-sm mt-0.5">Inicio</span>
+    <!-- Punto indicador decorativo -->
+    <span class="absolute -top-0.5 w-1.5 h-1.5 rounded-full bg-primary animate-pulse-soft"></span>
   </a>
-  <a class="flex flex-col items-center justify-center text-on-surface-variant pt-2 hover:bg-surface-container-low transition-colors active:scale-95 duration-150" href="#" data-route="patients">
-    <span class="material-symbols-outlined">pets</span>
-    <span class="font-label-sm text-label-sm">Pacientes</span>
+
+  <!-- Pacientes -->
+  <a class="flex flex-col items-center justify-center text-on-surface-variant pt-2 transition-all duration-300 ease-out hover:text-primary hover:-translate-y-1 hover:bg-primary/5 rounded-lg px-3 active:scale-95 group" href="#" data-route="patients">
+    <span class="material-symbols-outlined transition-transform duration-300 group-hover:scale-110">pets</span>
+    <span class="font-label-sm text-label-sm mt-0.5">Pacientes</span>
   </a>
-  <a class="flex flex-col items-center justify-center text-on-surface-variant pt-2 hover:bg-surface-container-low transition-colors active:scale-95 duration-150" href="#" data-route="converter">
-    <span class="material-symbols-outlined">sync_alt</span>
-    <span class="font-label-sm text-label-sm">Convertidor</span>
+
+  <!-- Convertidor -->
+  <a class="flex flex-col items-center justify-center text-on-surface-variant pt-2 transition-all duration-300 ease-out hover:text-primary hover:-translate-y-1 hover:bg-primary/5 rounded-lg px-3 active:scale-95 group" href="#" data-route="converter">
+    <span class="material-symbols-outlined transition-transform duration-300 group-hover:scale-110">sync_alt</span>
+    <span class="font-label-sm text-label-sm mt-0.5">Convertidor</span>
   </a>
-  <a class="flex flex-col items-center justify-center text-on-surface-variant pt-2 hover:bg-surface-container-low transition-colors active:scale-95 duration-150" href="#" data-route="library">
-    <span class="material-symbols-outlined">menu_book</span>
-    <span class="font-label-sm text-label-sm">Biblioteca</span>
+
+  <!-- Biblioteca -->
+  <a class="flex flex-col items-center justify-center text-on-surface-variant pt-2 transition-all duration-300 ease-out hover:text-primary hover:-translate-y-1 hover:bg-primary/5 rounded-lg px-3 active:scale-95 group" href="#" data-route="library">
+    <span class="material-symbols-outlined transition-transform duration-300 group-hover:scale-110">menu_book</span>
+    <span class="font-label-sm text-label-sm mt-0.5">Biblioteca</span>
   </a>
-  <a class="flex flex-col items-center justify-center text-on-surface-variant pt-2 hover:bg-surface-container-low transition-colors active:scale-95 duration-150" href="#" data-route="history">
-    <span class="material-symbols-outlined">history</span>
-    <span class="font-label-sm text-label-sm">Historial</span>
+
+  <!-- Historial -->
+  <a class="flex flex-col items-center justify-center text-on-surface-variant pt-2 transition-all duration-300 ease-out hover:text-primary hover:-translate-y-1 hover:bg-primary/5 rounded-lg px-3 active:scale-95 group" href="#" data-route="history">
+    <span class="material-symbols-outlined transition-transform duration-300 group-hover:scale-110">history</span>
+    <span class="font-label-sm text-label-sm mt-0.5">Historial</span>
   </a>
+
 </nav>
 `;

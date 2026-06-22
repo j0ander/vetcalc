@@ -1,4 +1,3 @@
-// src/pages/dosage/DosageController.ts
 import { DosageView } from './DosageView';
 import { router, type Destroyable } from '@/services/RouterService';
 import { BaseController } from '@/controllers/BaseController';
@@ -8,23 +7,17 @@ export class DosageController extends BaseController implements Destroyable {
   private view: DosageView;
 
   constructor() {
-    super(); // Llama al constructor de BaseController
+    super();
     this.view = new DosageView();
   }
 
   async init(): Promise<void> {
     this.view.render();
-
-    // Navegación global para todos los [data-route]
     this.setupGlobalNavigation();
-
-    // Badge premium (color según suscripción)
     this.initPremiumBadge();
-
-    // Configurar eventos específicos del dosage
     this.setupEventListeners();
 
-    // Valores por defecto de ejemplo
+    // Valores por defecto
     this.view.setWeight(28.5);
     this.view.setDosage(5);
     this.view.setConcentration(50);
@@ -32,7 +25,6 @@ export class DosageController extends BaseController implements Destroyable {
   }
 
   private setupEventListeners(): void {
-    // Botón calcular
     const calcBtn = this.view.getCalculateButton();
     calcBtn?.addEventListener('click', () => {
       this.calculate();
@@ -40,13 +32,11 @@ export class DosageController extends BaseController implements Destroyable {
       setTimeout(() => calcBtn.classList.remove('scale-95'), 150);
     });
 
-    // Botón guardar (log)
     const logBtn = this.view.getLogButton();
     logBtn?.addEventListener('click', () => {
       this.saveToHistory();
     });
 
-    // Autocomplete simple: resaltar borde cuando se escribe
     const drugInput = document.getElementById('drug-name') as HTMLInputElement | null;
     drugInput?.addEventListener('input', (e) => {
       const target = e.target as HTMLInputElement;
@@ -66,7 +56,6 @@ export class DosageController extends BaseController implements Destroyable {
 
     const totalMg = weight * dosePerKg;
     const volumeMl = totalMg / concentration;
-
     this.view.showResult(totalMg, volumeMl);
   }
 
@@ -82,7 +71,7 @@ export class DosageController extends BaseController implements Destroyable {
   }
 
   destroy(): void {
-    this.destroyPremiumBadge(); // Limpiar suscripción premium
+    this.destroyPremiumBadge();
     console.log('[DosageController] Destroyed');
   }
 }

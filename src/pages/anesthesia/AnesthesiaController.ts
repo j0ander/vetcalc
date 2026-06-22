@@ -1,10 +1,12 @@
 import { AnesthesiaView, Drug } from './AnesthesiaView';
 import { router, type Destroyable } from '@/services/RouterService';
+import { BaseController } from '@/controllers/BaseController';
 import type { AppRoute } from '@/types';
 
-export class AnesthesiaController implements Destroyable {
+export class AnesthesiaController extends BaseController implements Destroyable {
   private view: AnesthesiaView;
-  private weightKg: number = 28.5; // mock, luego se puede obtener de un paciente seleccionado
+  private weightKg: number = 28.5;
+  private asaStatus: string = 'Clase II';
   private drugs: Drug[] = [
     { name: 'Acepromazina', dosePerKg: 0.02, concentration: 10, category: 'premed', selected: true },
     { name: 'Butorfanol', dosePerKg: 0.2, concentration: 10, category: 'premed', selected: true },
@@ -12,28 +14,21 @@ export class AnesthesiaController implements Destroyable {
   ];
 
   constructor() {
+    super();
     this.view = new AnesthesiaView();
   }
 
   async init(): Promise<void> {
     this.view.render();
+    this.setupGlobalNavigation(); // Navegación global para data-route
+    this.initPremiumBadge();
     this.setupEventListeners();
     this.renderDrugLists();
     this.updateSummaryAndFluids();
+    this.setupExpandPanel(); // Control del panel expandible
   }
 
   private setupEventListeners(): void {
-    // Navegación general (botones con data-route)
-    document.querySelectorAll('[data-route]').forEach(el => {
-      el.addEventListener('click', async (e) => {
-        e.preventDefault();
-        const route = el.getAttribute('data-route') as AppRoute;
-        if (route) {
-          await router.navigate(route);
-        }
-      });
-    });
-
     // Botón finalizar
     const finalizeBtn = this.view.getFinalizeBtn();
     finalizeBtn?.addEventListener('click', () => {
@@ -45,8 +40,24 @@ export class AnesthesiaController implements Destroyable {
     const printBtn = this.view.getPrintBtn();
     printBtn?.addEventListener('click', () => {
       console.log('Generar PDF');
-      // Aquí se podría implementar la generación de PDF
     });
+  }
+
+  private setupExpandPanel(): void {
+    const expandBtn = this.view.getExpandBtn();
+    const detailsPanel = this.view.getDetailsPanel();
+    if (expandBtn && detailsPanel) {
+      expandBtn.addEventListener('click', () => {
+        const isHidden = detailsPanel.classList.contains('hidden');
+        if (isHidden) {
+          detailsPanel.classList.remove('hidden');
+          expandBtn.innerHTML = '<span class="material-symbols-outlined text-[18px]">expand_less</span> Ocultar detalles del protocolo';
+        } else {
+          detailsPanel.classList.add('hidden');
+          expandBtn.innerHTML = '<span class="material-symbols-outlined text-[18px]">expand_more</span> Ver detalles del protocolo';
+        }
+      });
+    }
   }
 
   private renderDrugLists(): void {
@@ -61,23 +72,19 @@ export class AnesthesiaController implements Destroyable {
       const drug = this.drugs.find(d => d.name === name);
       if (drug) drug.selected = selected;
       this.updateSummaryAndFluids();
-      // Actualizar UI de valores en los cards (ya que el peso no cambia, pero si cambia la selección, se refleja en la tabla)
       this.refreshDrugValuesUI();
-    });
+    }, this.weightKg);
 
     this.view.renderDrugList(inductionContainer, inductions, (name, selected) => {
       const drug = this.drugs.find(d => d.name === name);
       if (drug) drug.selected = selected;
       this.updateSummaryAndFluids();
       this.refreshDrugValuesUI();
-    });
+    }, this.weightKg);
   }
 
   private refreshDrugValuesUI(): void {
-    // Actualizar los valores numéricos en cada tarjeta según el peso actual
-    const allDrugs = this.drugs;
-    // Para cada fármaco, buscar su contenedor de valores y actualizar
-    for (const drug of allDrugs) {
+    for (const drug of this.drugs) {
       const valueContainer = document.getElementById(`drug-values-${drug.name.replace(/\s/g, '')}`);
       if (valueContainer) {
         this.view.updateDrugValuesUI(valueContainer, drug, this.weightKg);
@@ -87,12 +94,20 @@ export class AnesthesiaController implements Destroyable {
 
   private updateSummaryAndFluids(): void {
     const selectedDrugs = this.drugs.filter(d => d.selected);
-    // Calcular fluidos totales estimados (ejemplo: 5 mL/kg/h)
-    const totalFluids = this.weightKg * 5;
+    const totalFluids = this.weightKg * 5; // 5 mL/kg/h (ejemplo)
     this.view.renderSummary(selectedDrugs, this.weightKg, totalFluids);
+
+    // Actualizar panel de detalles
+    this.view.updateDetailPanel(
+      this.weightKg,
+      this.asaStatus,
+      selectedDrugs.length,
+      totalFluids
+    );
   }
 
   destroy(): void {
+    this.destroyPremiumBadge();
     console.log('[AnesthesiaController] Destroyed');
   }
 }

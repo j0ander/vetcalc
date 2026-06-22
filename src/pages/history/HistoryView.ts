@@ -62,7 +62,7 @@ export class HistoryView {
       return;
     }
 
-    // Agrupar por fecha (hoy, ayer, antes)
+    // Agrupar por fecha
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const yesterday = new Date(today);
@@ -78,26 +78,26 @@ export class HistoryView {
     let html = '';
 
     if (todayRecords.length) {
-      html += `<div class="flex items-center gap-2 mb-2"><span class="text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">Hoy</span><div class="h-[1px] flex-grow bg-outline-variant"></div></div>`;
+      html += `<div class="flex items-center gap-2 mb-3"><span class="text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">Hoy</span><div class="h-[1px] flex-grow bg-outline-variant"></div></div>`;
       html += this.renderRecordGroup(todayRecords);
     }
     if (yesterdayRecords.length) {
-      html += `<div class="flex items-center gap-2 mt-8 mb-2"><span class="text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">Ayer</span><div class="h-[1px] flex-grow bg-outline-variant"></div></div>`;
+      html += `<div class="flex items-center gap-2 mt-6 mb-3"><span class="text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">Ayer</span><div class="h-[1px] flex-grow bg-outline-variant"></div></div>`;
       html += this.renderRecordGroup(yesterdayRecords);
     }
     if (olderRecords.length) {
-      html += `<div class="flex items-center gap-2 mt-8 mb-2"><span class="text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">Anterior</span><div class="h-[1px] flex-grow bg-outline-variant"></div></div>`;
+      html += `<div class="flex items-center gap-2 mt-6 mb-3"><span class="text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">Anterior</span><div class="h-[1px] flex-grow bg-outline-variant"></div></div>`;
       html += this.renderRecordGroup(olderRecords);
     }
 
     this.historyContainer.innerHTML = html;
 
-    // Añadir event listeners a cada tarjeta
-    document.querySelectorAll('.history-card-hover').forEach(card => {
+    // Event listeners para cada tarjeta (navegación a detalle)
+    document.querySelectorAll('.history-card').forEach(card => {
       card.addEventListener('click', (e) => {
         const recordId = card.getAttribute('data-id');
-        console.log(`Ver detalle de registro: ${recordId}`);
-        // Aquí se podría navegar a una vista de detalle (futuro)
+        console.log(`[History] Ver detalle de registro: ${recordId}`);
+        // Aquí se podría navegar a una vista de detalle
       });
     });
   }
@@ -105,33 +105,43 @@ export class HistoryView {
   private renderRecordGroup(records: HistoryRecord[]): string {
     return records.map(record => {
       const icon = this.getIconForType(record.type);
+      const borderColor = this.getBorderColorForType(record.type);
       const bgClass = this.getBgClassForType(record.type);
       const textColorClass = this.getTextColorClassForType(record.type);
       const relativeTime = this.getRelativeTime(record.timestamp);
       const premiumBadge = record.isPremium ? `<span class="material-symbols-outlined text-[16px] text-tertiary" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>` : '';
 
       return `
-        <div class="history-card-hover bg-surface-container-lowest p-4 rounded-xl shadow-[0px_2px_8px_rgba(38,50,56,0.08)] flex items-center gap-4 cursor-pointer" data-id="${record.id}">
-          <div class="h-12 w-12 rounded-lg ${bgClass} flex items-center justify-center ${textColorClass}">
+        <div class="history-card bg-white border border-outline-variant/30 border-l-4 ${borderColor} rounded-xl p-4 flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" data-id="${record.id}">
+          <div class="h-12 w-12 rounded-lg ${bgClass} flex items-center justify-center ${textColorClass} flex-shrink-0">
             <span class="material-symbols-outlined">${icon}</span>
           </div>
-          <div class="flex-grow">
-            <div class="flex justify-between items-start">
+          <div class="flex-grow min-w-0">
+            <div class="flex justify-between items-start gap-2 flex-wrap">
               <div class="flex items-center gap-1">
-                <h3 class="font-headline-md text-[18px] text-on-surface">${this.escapeHtml(record.title)}</h3>
+                <h3 class="font-headline-md text-[18px] text-on-surface truncate">${this.escapeHtml(record.title)}</h3>
                 ${premiumBadge}
               </div>
-              <span class="text-on-surface-variant font-label-sm text-label-sm">${relativeTime}</span>
+              <span class="text-on-surface-variant font-label-sm text-label-sm whitespace-nowrap">${relativeTime}</span>
             </div>
-            <p class="font-body-md text-on-surface-variant text-[14px]">Paciente: ${this.escapeHtml(record.patientName)} (${record.species}, ${record.weightKg}kg)</p>
+            <p class="font-body-md text-on-surface-variant text-[14px] truncate">Paciente: ${this.escapeHtml(record.patientName)} (${record.species}, ${record.weightKg}kg)</p>
             <div class="mt-1">
-              <span class="inline-flex items-center rounded-md bg-surface-container-high px-2 py-0.5 text-xs font-medium text-on-surface">${this.escapeHtml(record.summary)}</span>
+              <span class="inline-flex items-center rounded-md bg-surface-container-high px-2 py-0.5 text-xs font-medium text-on-surface max-w-full overflow-hidden whitespace-nowrap text-ellipsis">${this.escapeHtml(record.summary)}</span>
             </div>
           </div>
-          <span class="material-symbols-outlined text-outline-variant">chevron_right</span>
+          <span class="material-symbols-outlined text-outline-variant flex-shrink-0">chevron_right</span>
         </div>
       `;
     }).join('');
+  }
+
+  private getBorderColorForType(type: string): string {
+    switch (type) {
+      case 'dosage': return 'border-l-primary';
+      case 'fluidotherapy': return 'border-l-secondary';
+      case 'anesthesia': return 'border-l-tertiary';
+      default: return 'border-l-outline';
+    }
   }
 
   private getIconForType(type: string): string {
@@ -180,16 +190,16 @@ export class HistoryView {
     return div.innerHTML;
   }
 
-  // Actualizar estilo de filtro activo
+  // Actualizar estilo de filtro activo (alineado con el template: bg-secondary para activo, bg-white/80 para inactivos)
   setActiveFilter(filter: string): void {
     this.filterButtons?.forEach(btn => {
       const btnFilter = btn.getAttribute('data-filter');
       if (btnFilter === filter) {
-        btn.classList.remove('bg-surface-container-high', 'text-on-surface-variant');
-        btn.classList.add('bg-primary', 'text-on-primary', 'shadow-sm');
+        btn.classList.remove('bg-white/80', 'text-on-surface-variant', 'border', 'border-outline-variant');
+        btn.classList.add('bg-secondary', 'text-white', 'shadow-sm');
       } else {
-        btn.classList.remove('bg-primary', 'text-on-primary', 'shadow-sm');
-        btn.classList.add('bg-surface-container-high', 'text-on-surface-variant');
+        btn.classList.remove('bg-secondary', 'text-white', 'shadow-sm');
+        btn.classList.add('bg-white/80', 'text-on-surface-variant', 'border', 'border-outline-variant');
       }
     });
   }

@@ -11,6 +11,12 @@ export class DosageView {
   private resultDosageSpan: HTMLElement | null = null;
   private logBtn: HTMLElement | null = null;
 
+  // Elementos del panel de detalles expandible
+  private detailWeight: HTMLElement | null = null;
+  private detailDosage: HTMLElement | null = null;
+  private detailConcentration: HTMLElement | null = null;
+  private detailVolume: HTMLElement | null = null;
+
   render(): void {
     const app = document.getElementById('app');
     if (app) {
@@ -29,6 +35,12 @@ export class DosageView {
     this.resultVolumeSpan = document.getElementById('result-volume');
     this.resultDosageSpan = document.getElementById('result-dosage');
     this.logBtn = document.getElementById('log-btn');
+
+    // Detalles del panel
+    this.detailWeight = document.getElementById('detail-weight');
+    this.detailDosage = document.getElementById('detail-dosage');
+    this.detailConcentration = document.getElementById('detail-concentration');
+    this.detailVolume = document.getElementById('detail-volume');
   }
 
   getDrugName(): string {
@@ -62,8 +74,11 @@ export class DosageView {
 
   showResult(totalMg: number, volumeMl: number): void {
     if (this.resultContainer) {
-      this.resultContainer.classList.remove('opacity-0', 'translate-y-4');
-      this.resultContainer.classList.add('opacity-100', 'translate-y-0');
+      // Remover 'hidden' para mostrar el contenedor
+      this.resultContainer.classList.remove('hidden');
+      // Añadir clases de animación (ya tiene transition-all)
+      this.resultContainer.style.opacity = '1';
+      this.resultContainer.style.transform = 'translateY(0)';
     }
     if (this.resultVolumeSpan) {
       this.resultVolumeSpan.textContent = `${volumeMl.toFixed(2)} mL`;
@@ -71,25 +86,44 @@ export class DosageView {
     if (this.resultDosageSpan) {
       this.resultDosageSpan.textContent = `Dosis: ${totalMg.toFixed(2)} mg total`;
     }
+
+    // Actualizar panel de detalles
+    const weight = this.getWeight();
+    const dosePerKg = this.getDosageMgPerKg();
+    const concentration = this.getConcentrationMgPerMl();
+
+    if (this.detailWeight) {
+      this.detailWeight.textContent = `${weight.toFixed(1)} kg`;
+    }
+    if (this.detailDosage) {
+      this.detailDosage.textContent = `${dosePerKg.toFixed(2)} mg/kg`;
+    }
+    if (this.detailConcentration) {
+      this.detailConcentration.textContent = `${concentration.toFixed(1)} mg/mL`;
+    }
+    if (this.detailVolume) {
+      this.detailVolume.textContent = `${volumeMl.toFixed(2)} mL`;
+    }
   }
 
   hideResult(): void {
     if (this.resultContainer) {
-      this.resultContainer.classList.add('opacity-0', 'translate-y-4');
-      this.resultContainer.classList.remove('opacity-100', 'translate-y-0');
+      // Añadir 'hidden' para ocultar el contenedor
+      this.resultContainer.classList.add('hidden');
+      this.resultContainer.style.opacity = '0';
+      this.resultContainer.style.transform = 'translateY(20px)';
     }
   }
 
   getCalculateButton(): HTMLElement | null { return this.calculateBtn; }
   getLogButton(): HTMLElement | null { return this.logBtn; }
 
-  // Para la animación de borde al escribir en el campo de fármaco (opcional)
   highlightDrugInput(highlight: boolean): void {
     if (this.drugInput) {
       if (highlight) {
-        this.drugInput.classList.add('border-primary');
+        this.drugInput.classList.add('border-primary', 'ring-2', 'ring-primary/30');
       } else {
-        this.drugInput.classList.remove('border-primary');
+        this.drugInput.classList.remove('border-primary', 'ring-2', 'ring-primary/30');
       }
     }
   }

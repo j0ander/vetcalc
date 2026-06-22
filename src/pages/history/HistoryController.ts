@@ -20,7 +20,6 @@ export class HistoryController implements Destroyable {
   }
 
   private loadMockData(): void {
-    // Convertir los datos del MockDataService a HistoryRecord
     const mockHistory = mockDataService.getRecentHistory(10);
     this.allRecords = mockHistory.map(record => ({
       id: record.id,

@@ -1,4 +1,3 @@
-// src/pages/fluidotherapy/FluidotherapyController.ts
 import { FluidotherapyView } from './FluidotherapyView';
 import { router, type Destroyable } from '@/services/RouterService';
 import { BaseController } from '@/controllers/BaseController';
@@ -9,26 +8,19 @@ export class FluidotherapyController extends BaseController implements Destroyab
   private currentDripFactor: number = 15;
 
   constructor() {
-    super(); // Llama al constructor de BaseController
+    super();
     this.view = new FluidotherapyView();
   }
 
   async init(): Promise<void> {
     this.view.render();
-
-    // Navegación global para todos los elementos con data-route
     this.setupGlobalNavigation();
-
-    // Badge premium (color según suscripción)
     this.initPremiumBadge();
-
-    // Configurar eventos específicos del fluidoterapia
     this.setupEventListeners();
-    this.calculate(); // cálculo inicial
+    this.calculate();
   }
 
   private setupEventListeners(): void {
-    // Inputs
     this.view.onWeightInput(() => this.calculate());
     this.view.onDehydrationInput(() => {
       const val = this.view.getDehydrationPercent();
@@ -38,21 +30,19 @@ export class FluidotherapyController extends BaseController implements Destroyab
     this.view.onMaintenanceInput(() => this.calculate());
     this.view.onLossesInput(() => this.calculate());
 
-    // Drip factor
     this.view.onDripButtonClick((factor) => {
       this.currentDripFactor = factor;
       this.calculate();
     });
 
-    // Presets de mantenimiento
     this.view.onMaintenancePreset((value) => {
-      if (this.view['maintenanceInput']) {
-        (this.view['maintenanceInput'] as HTMLInputElement).value = value.toString();
+      const input = document.getElementById('maintenance') as HTMLInputElement;
+      if (input) {
+        input.value = value.toString();
         this.calculate();
       }
     });
 
-    // Botones de acción
     this.view.onSave(() => {
       alert('Protocolo guardado (simulación)');
       console.log('Fluidoterapia guardada');
@@ -75,11 +65,15 @@ export class FluidotherapyController extends BaseController implements Destroyab
     const hourly = total24h / 24;
     const dropsPerMin = (hourly * this.currentDripFactor) / 60;
 
+    // Actualizar resultados principales
     this.view.updateResults(total24h, hourly, dropsPerMin);
+
+    // Actualizar panel de detalles expandible
+    this.view.updateDetailPanel(deficit, maintenanceTotal, losses, this.currentDripFactor);
   }
 
   destroy(): void {
-    this.destroyPremiumBadge(); // Limpiar suscripción premium
+    this.destroyPremiumBadge();
     console.log('[FluidotherapyController] Destroyed');
   }
 }

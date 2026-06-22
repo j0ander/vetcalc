@@ -14,6 +14,12 @@ export class FluidotherapyView {
   private saveBtn: HTMLElement | null = null;
   private reportBtn: HTMLElement | null = null;
 
+  // Nuevos elementos para el panel de detalles expandible
+  private deficitDetail: HTMLElement | null = null;
+  private maintenanceDetail: HTMLElement | null = null;
+  private lossesDetail: HTMLElement | null = null;
+  private dripFactorDetail: HTMLElement | null = null;
+
   render(): void {
     const app = document.getElementById('app');
     if (app) {
@@ -35,6 +41,12 @@ export class FluidotherapyView {
     this.maintenancePresetBtns = document.querySelectorAll('[data-maintenance]');
     this.saveBtn = document.getElementById('save-btn');
     this.reportBtn = document.getElementById('report-btn');
+
+    // Elementos del panel de detalles
+    this.deficitDetail = document.getElementById('deficit-detail');
+    this.maintenanceDetail = document.getElementById('maintenance-detail');
+    this.lossesDetail = document.getElementById('losses-detail');
+    this.dripFactorDetail = document.getElementById('drip-factor-detail');
   }
 
   getWeight(): number { return parseFloat(this.weightInput?.value || '0'); }
@@ -52,7 +64,15 @@ export class FluidotherapyView {
     if (this.dripRateSpan) this.dripRateSpan.textContent = Math.round(dropsPerMin).toString();
   }
 
-  // Eventos
+  // Nuevo método para actualizar el panel de detalles expandible
+  updateDetailPanel(deficit: number, maintenance: number, losses: number, dripFactor: number): void {
+    if (this.deficitDetail) this.deficitDetail.textContent = `${deficit.toFixed(1)} ml`;
+    if (this.maintenanceDetail) this.maintenanceDetail.textContent = `${maintenance.toFixed(1)} ml`;
+    if (this.lossesDetail) this.lossesDetail.textContent = `${losses.toFixed(1)} ml`;
+    if (this.dripFactorDetail) this.dripFactorDetail.textContent = `${dripFactor} gotas/ml`;
+  }
+
+  // Eventos (sin cambios)
   onWeightInput(callback: () => void): void {
     this.weightInput?.addEventListener('input', callback);
   }
@@ -70,7 +90,6 @@ export class FluidotherapyView {
       btn.addEventListener('click', () => {
         const factor = parseInt(btn.getAttribute('data-drip') || '15');
         callback(factor);
-        // Actualizar estilo visual
         this.dripButtons?.forEach(b => {
           b.classList.remove('border-primary', 'bg-primary-container/20', 'text-primary');
           b.classList.add('border-transparent', 'bg-surface-container-high', 'text-on-surface-variant');
