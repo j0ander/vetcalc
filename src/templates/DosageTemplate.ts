@@ -175,9 +175,10 @@ export const DosageTemplate = `
     <span class="font-label-sm text-label-sm mt-0.5">Convertidor</span>
   </a>
 
+  <!-- Citas -->
   <a class="flex flex-col items-center justify-center text-on-surface-variant pt-2 transition-all duration-300 ease-out hover:text-primary hover:-translate-y-1 hover:bg-primary/5 rounded-lg px-3 active:scale-95 group" href="#" data-route="library">
-    <span class="material-symbols-outlined transition-transform duration-300 group-hover:scale-110">menu_book</span>
-    <span class="font-label-sm text-label-sm mt-0.5">Biblioteca</span>
+    <span class="material-symbols-outlined transition-transform duration-300 group-hover:scale-110" style="font-variation-settings: 'FILL' 1;">calendar_month</span>
+    <span class="font-label-sm text-label-sm mt-0.5">Citas</span>
   </a>
 
   <a class="flex flex-col items-center justify-center text-primary font-bold border-t-2 border-primary pt-2 -translate-y-1 shadow-sm transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-md active:scale-95 group" href="#" data-route="dosage">

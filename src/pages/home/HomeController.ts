@@ -5,6 +5,7 @@ import { mockDataService } from '@/services/MockDataService'
 import { VET_TIPS } from '@/constants'
 import type { AppRoute, Patient, CalculationRecord } from '@/types'
 import { BaseController } from '@/controllers/BaseController'
+import { authService } from '@/services/AuthService' // ✅ Importado
 
 export class HomeController extends BaseController implements Destroyable {
   private view: HomeView
@@ -19,7 +20,7 @@ export class HomeController extends BaseController implements Destroyable {
   }
 
   constructor() {
-    super() // Llama al constructor de BaseController
+    super()
     this.view = new HomeView()
   }
 
@@ -42,14 +43,13 @@ export class HomeController extends BaseController implements Destroyable {
       });
     });
 
-    // Navegación global (para cualquier elemento con data-route)
     this.setupGlobalNavigation();
-
-    // Badge premium (color según suscripción)
     this.initPremiumBadge();
-    // Listeners específicos (search, profile, view all)
-  this.setupSpecificListeners();
-    // Configuración específica de Home (que no usa data-route)
+    
+    // ✅ Actualizar saludo con el nombre del usuario
+    this.updateGreeting();
+
+    this.setupSpecificListeners();
     this.setupElements();
     this.renderRecentPatients();
     this.renderRecentHistory();
@@ -58,14 +58,26 @@ export class HomeController extends BaseController implements Destroyable {
     this.updateOnlineStatus(navigator.onLine);
   }
 
-   destroy(): void {
+  destroy(): void {
     window.removeEventListener('online', this.onlineHandler)
     window.removeEventListener('offline', this.offlineHandler)
     this.destroyPremiumBadge();
     console.log('[HomeController] Destroyed')
   }
 
-  // 👇 Método que faltaba (defínelo aquí)
+  // ✅ Nuevo método para actualizar el saludo
+  private updateGreeting(): void {
+    const user = authService.getCurrentUser();
+    const greetingEl = this.view.getGreetingElement();
+    if (greetingEl) {
+      if (user?.name) {
+        greetingEl.textContent = `Hola, ${user.name}`;
+      } else {
+        greetingEl.textContent = 'Hola, Dr. Smith'; // fallback
+      }
+    }
+  }
+
   private setupSpecificListeners(): void {
     const searchBtn = this.view.getSearchButton();
     if (searchBtn) {

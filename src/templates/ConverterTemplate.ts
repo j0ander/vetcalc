@@ -141,9 +141,10 @@ export const ConverterTemplate = `
     <span class="absolute -top-0.5 w-1.5 h-1.5 rounded-full bg-primary animate-pulse-soft"></span>
   </a>
 
+  <!-- Citas -->
   <a class="flex flex-col items-center justify-center text-on-surface-variant pt-2 transition-all duration-300 ease-out hover:text-primary hover:-translate-y-1 hover:bg-primary/5 rounded-lg px-3 active:scale-95 group" href="#" data-route="library">
-    <span class="material-symbols-outlined transition-transform duration-300 group-hover:scale-110">menu_book</span>
-    <span class="font-label-sm text-label-sm mt-0.5">Biblioteca</span>
+    <span class="material-symbols-outlined transition-transform duration-300 group-hover:scale-110" style="font-variation-settings: 'FILL' 1;">calendar_month</span>
+    <span class="font-label-sm text-label-sm mt-0.5">Citas</span>
   </a>
 
   <a class="flex flex-col items-center justify-center text-on-surface-variant pt-2 transition-all duration-300 ease-out hover:text-primary hover:-translate-y-1 hover:bg-primary/5 rounded-lg px-3 active:scale-95 group" href="#" data-route="history">
