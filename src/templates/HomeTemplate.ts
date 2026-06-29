@@ -10,7 +10,7 @@ export const HomeTemplate = `
   <!-- Imágenes decorativas (mantenidas) -->
   <img src="/icons/Animales/a15.png" alt="" class="absolute -left-6 -top-10 w-28 md:w-52 opacity-20 select-none" />
   <img src="/icons/Animales/a2.png" alt="" class="absolute -right-6 -bottom-10 w-24 md:w-48 opacity-20 select-none" />
-  <img src="/icons/Animales/a3.png" alt="" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 md:w-96 opacity-15 select-none" />
+  <img src="/icons/Animales/gato3.png" alt="" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 md:w-96 opacity-15 select-none" />
 </div>
 
 <!-- ===== HEADER ===== -->
@@ -50,7 +50,7 @@ export const HomeTemplate = `
 
   <!-- ===== BANNER ===== -->
   <section class="relative w-full rounded-2xl overflow-hidden shadow-elevated animate-fade-in-up group min-h-[160px] md:min-h-[425px]"
-           style="background-image: url('/icons/Animales/a3.png'); background-size: cover; background-position: center;">
+           style="background-image: url('/icons/Animales/gato5.png'); background-size: cover; background-position: top;">
     <div class="absolute inset-0 bg-gradient-to-r from-primary/70 to-secondary/70 mix-blend-multiply"></div>
     <div class="absolute inset-0 flex flex-col justify-center px-6 text-white">
       <h2 class="font-headline-lg text-headline-lg md:text-headline-xl drop-shadow-md">Bienvenido, Dr. Smith</h2>
@@ -173,7 +173,7 @@ export const HomeTemplate = `
   </section>
 
   <!-- ===== CONSEJO DEL DÍA ===== -->
-  <section class="w-full rounded-2xl overflow-hidden relative group shadow-elevated animate-fade-in-up min-h-[180px]" style="animation-delay: 450ms; background-image: url('/icons/Animales/a14.png'); background-size: cover; background-position: center;">
+  <section class="w-full rounded-2xl overflow-hidden relative group shadow-elevated animate-fade-in-up min-h-[180px]" style="animation-delay: 450ms; background-image: url('/icons/Animales/gato3.png'); background-size: cover; background-position: center;">
     <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
     <div class="absolute bottom-4 left-4 right-4 p-4 glass-card rounded-xl backdrop-blur-sm">
       <div class="flex items-center gap-2">

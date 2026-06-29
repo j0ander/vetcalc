@@ -1,5 +1,5 @@
 export const LibraryTemplate = `
-<!-- ===== FONDO CON ESTILO SPLASH (bg-neutral + vet-pattern) ===== -->
+<!-- ===== FONDO CON ESTILO SPLASH ===== -->
 <div class="fixed inset-0 pointer-events-none z-0">
   <div class="absolute inset-0 bg-neutral"></div>
   <div class="absolute inset-0 vet-pattern"></div>
@@ -42,169 +42,76 @@ export const LibraryTemplate = `
   </div>
 </header>
 
-<main class="relative z-10 max-w-4xl mx-auto px-container-padding pb-32 pt-stack-md space-y-6">
+<main class="relative z-10 max-w-4xl mx-auto px-container-padding pb-32 pt-6 space-y-6">
 
   <!-- ===== HERO ===== -->
   <section class="mb-4 animate-fade-in-up">
     <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 p-6 text-on-surface shadow-sm border border-outline-variant backdrop-blur-sm">
       <div class="relative z-10">
-        <h2 class="font-headline-lg-mobile text-headline-lg-mobile mb-2 text-primary">Recursos Clínicos</h2>
-        <p class="font-body-md text-body-md opacity-90 max-w-md text-on-surface-variant">Accede a formularios de medicamentos veterinarios, protocolos de emergencia y guías clínicas basadas en evidencia.</p>
+        <h2 class="font-headline-lg-mobile text-headline-lg-mobile mb-2 text-primary">Agenda de Citas</h2>
+        <p class="font-body-md text-body-md opacity-90 max-w-md text-on-surface-variant">Registra y administra las citas de tus pacientes. Recibirás recordatorios automáticos.</p>
       </div>
-      <span class="material-symbols-outlined absolute -right-4 -bottom-4 text-[120px] opacity-10 pointer-events-none text-primary">menu_book</span>
+      <span class="material-symbols-outlined absolute -right-4 -bottom-4 text-[120px] opacity-10 pointer-events-none text-primary">calendar_month</span>
     </div>
   </section>
 
-  <!-- ===== BUSCADOR Y FILTROS ===== -->
-  <div class="mb-4 flex flex-col gap-4 animate-fade-in-up" style="animation-delay: 50ms;">
-    <div class="relative flex items-center bg-white/80 backdrop-blur-sm rounded-xl border border-outline-variant shadow-sm focus-within:shadow-md focus-within:border-primary transition-all duration-200">
-      <span class="material-symbols-outlined absolute left-4 text-outline">search</span>
-      <input class="w-full h-touch-target-min pl-12 pr-4 bg-transparent rounded-xl font-body-md text-on-surface focus:outline-none" type="text" placeholder="Buscar protocolo o fármaco..." id="search-input">
+  <!-- ===== FORMULARIO PARA AGREGAR CITA ===== -->
+  <section class="bg-white/80 backdrop-blur-sm rounded-2xl border border-outline-variant shadow-sm p-5 animate-fade-in-up" style="animation-delay: 50ms;">
+    <h3 class="font-headline-md text-headline-md text-on-surface mb-4 flex items-center gap-2">
+      <span class="material-symbols-outlined text-secondary">add_circle</span>
+      Nueva Cita
+    </h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label class="font-label-sm text-label-sm text-on-surface-variant block mb-1">Mascota</label>
+        <input type="text" id="appointment-pet" class="w-full h-touch-target-min px-4 bg-white/50 border border-outline-variant rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all" placeholder="Nombre de la mascota">
+      </div>
+      <div>
+        <label class="font-label-sm text-label-sm text-on-surface-variant block mb-1">Fecha</label>
+        <input type="date" id="appointment-date" class="w-full h-touch-target-min px-4 bg-white/50 border border-outline-variant rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all">
+      </div>
+      <div>
+        <label class="font-label-sm text-label-sm text-on-surface-variant block mb-1">Hora</label>
+        <input type="time" id="appointment-time" class="w-full h-touch-target-min px-4 bg-white/50 border border-outline-variant rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all">
+      </div>
+      <div>
+        <label class="font-label-sm text-label-sm text-on-surface-variant block mb-1">Descripción (opcional)</label>
+        <input type="text" id="appointment-desc" class="w-full h-touch-target-min px-4 bg-white/50 border border-outline-variant rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all" placeholder="Ej: Vacunación, consulta...">
+      </div>
     </div>
-    <div class="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
-      <button class="filter-btn px-4 py-2 rounded-full bg-secondary text-white font-label-md text-label-md whitespace-nowrap shadow-sm hover:shadow-md transition-all" data-filter="all">Todo</button>
-      <button class="filter-btn px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm text-on-surface-variant font-label-md text-label-md whitespace-nowrap hover:bg-primary/10 hover:text-primary transition-all border border-outline-variant" data-filter="recent">Recientes</button>
-      <button class="filter-btn px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm text-on-surface-variant font-label-md text-label-md whitespace-nowrap hover:bg-primary/10 hover:text-primary transition-all border border-outline-variant" data-filter="favorites">Favoritos</button>
-      <button class="filter-btn px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm text-on-surface-variant font-label-md text-label-md whitespace-nowrap hover:bg-primary/10 hover:text-primary transition-all border border-outline-variant" data-filter="offline">Offline</button>
-    </div>
+    <button id="add-appointment-btn" class="mt-4 w-full md:w-auto bg-primary text-white px-6 py-3 rounded-xl font-label-md shadow-sm hover:shadow-md transition-all hover:scale-105 flex items-center justify-center gap-2">
+      <span class="material-symbols-outlined">event</span>
+      Agendar Cita
+    </button>
+  </section>
+
+  <!-- ===== FILTROS ===== -->
+  <div class="flex flex-wrap gap-2 animate-fade-in-up" style="animation-delay: 100ms;">
+    <button class="filter-btn px-4 py-2 rounded-full bg-secondary text-white font-label-md text-label-md whitespace-nowrap shadow-sm hover:shadow-md transition-all" data-filter="all">Todas</button>
+    <button class="filter-btn px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm text-on-surface-variant font-label-md text-label-md whitespace-nowrap hover:bg-primary/10 hover:text-primary transition-all border border-outline-variant" data-filter="today">Hoy</button>
+    <button class="filter-btn px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm text-on-surface-variant font-label-md text-label-md whitespace-nowrap hover:bg-primary/10 hover:text-primary transition-all border border-outline-variant" data-filter="upcoming">Próximas</button>
+    <button class="filter-btn px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm text-on-surface-variant font-label-md text-label-md whitespace-nowrap hover:bg-primary/10 hover:text-primary transition-all border border-outline-variant" data-filter="past">Pasadas</button>
   </div>
 
-  <div class="space-y-6">
-    <!-- ===== FORMULARIO DE MEDICAMENTOS ===== -->
-    <section class="animate-fade-in-up" style="animation-delay: 100ms;">
-      <div class="flex items-center justify-between mb-3 px-1">
-        <h3 class="font-headline-md text-headline-md flex items-center gap-2 text-on-surface">
-          <span class="material-symbols-outlined text-secondary">medication</span>
-          Formulario de medicamentos
-        </h3>
-        <button class="text-primary font-label-md text-label-md hover:underline transition-all hover:scale-105 view-all" data-section="drugs">Ver todos</button>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="resource-card bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-sm hover:shadow-md transition-all border border-outline-variant active:scale-[0.98] cursor-pointer" data-id="antibiotic-guide">
-          <div class="flex items-start gap-4">
-            <div class="w-12 h-12 rounded-lg bg-secondary-container flex items-center justify-center text-on-secondary-container">
-              <span class="material-symbols-outlined">pill</span>
-            </div>
-            <div class="flex-1">
-              <h4 class="font-headline-md text-[16px] leading-tight mb-1 text-on-surface">Guía de dosificación de antibióticos</h4>
-              <p class="text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">Referencia • 2.4 MB</p>
-            </div>
-            <span class="material-symbols-outlined text-outline">picture_as_pdf</span>
-          </div>
-        </div>
-        <div class="resource-card bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-sm hover:shadow-md transition-all border border-outline-variant active:scale-[0.98] cursor-pointer" data-id="nsaid-chart">
-          <div class="flex items-start gap-4">
-            <div class="w-12 h-12 rounded-lg bg-secondary-container flex items-center justify-center text-on-secondary-container">
-              <span class="material-symbols-outlined">vaccines</span>
-            </div>
-            <div class="flex-1">
-              <h4 class="font-headline-md text-[16px] leading-tight mb-1 text-on-surface">Tabla de seguridad AINEs</h4>
-              <p class="text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">Artículo • Actualizado May</p>
-            </div>
-            <span class="material-symbols-outlined text-outline">open_in_new</span>
-          </div>
-        </div>
-      </div>
-    </section>
+  <!-- ===== LISTA DE CITAS ===== -->
+  <section class="space-y-3 animate-fade-in-up" style="animation-delay: 150ms;">
+    <div class="flex justify-between items-center px-1">
+      <h3 class="font-headline-md text-headline-md text-on-surface">Citas Agendadas</h3>
+      <span class="text-on-surface-variant font-label-sm text-label-sm" id="appointment-count">0 citas</span>
+    </div>
+    <div id="appointments-list" class="space-y-3">
+      <!-- Las citas se renderizan dinámicamente -->
+    </div>
+    <div id="empty-state" class="text-center py-12 text-on-surface-variant">
+      <span class="material-symbols-outlined text-5xl text-outline block mb-2">calendar_today</span>
+      <p>No hay citas agendadas</p>
+      <p class="text-sm opacity-70">Agrega una cita usando el formulario de arriba</p>
+    </div>
+  </section>
 
-    <!-- ===== PROTOCOLOS DE EMERGENCIA ===== -->
-    <section class="animate-fade-in-up" style="animation-delay: 150ms;">
-      <div class="flex items-center justify-between mb-3 px-1">
-        <h3 class="font-headline-md text-headline-md flex items-center gap-2 text-on-surface">
-          <span class="material-symbols-outlined text-error">emergency</span>
-          Protocolos de emergencia
-        </h3>
-        <button class="text-primary font-label-md text-label-md hover:underline transition-all hover:scale-105 view-all" data-section="emergency">Ver todos</button>
-      </div>
-      <div class="bg-white/80 backdrop-blur-sm rounded-xl overflow-hidden shadow-sm border border-outline-variant border-l-4 border-l-error">
-        <ul class="divide-y divide-outline-variant">
-          <li class="resource-item p-4 hover:bg-surface-container-low transition-colors cursor-pointer flex items-center justify-between" data-id="cpr-guide">
-            <div class="flex items-center gap-4">
-              <span class="material-symbols-outlined text-error">heart_check</span>
-              <div>
-                <p class="font-headline-md text-[16px] text-on-surface">Referencia rápida RCP (RECOVER)</p>
-                <p class="text-on-surface-variant text-label-sm font-label-sm">Cuidados críticos • Guías 2024</p>
-              </div>
-            </div>
-            <span class="material-symbols-outlined text-outline">chevron_right</span>
-          </li>
-          <li class="resource-item p-4 hover:bg-surface-container-low transition-colors cursor-pointer flex items-center justify-between" data-id="gdv-steps">
-            <div class="flex items-center gap-4">
-              <span class="material-symbols-outlined text-error">fluid_med</span>
-              <div>
-                <p class="font-headline-md text-[16px] text-on-surface">Pasos para estabilización de GDV</p>
-                <p class="text-on-surface-variant text-label-sm font-label-sm">Emergencia quirúrgica</p>
-              </div>
-            </div>
-            <span class="material-symbols-outlined text-outline">chevron_right</span>
-          </li>
-          <li class="resource-item p-4 hover:bg-surface-container-low transition-colors cursor-pointer flex items-center justify-between" data-id="toxin-db">
-            <div class="flex items-center gap-4">
-              <span class="material-symbols-outlined text-error">skull</span>
-              <div>
-                <p class="font-headline-md text-[16px] text-on-surface">Referencia de ingestión de toxinas</p>
-                <p class="text-on-surface-variant text-label-sm font-label-sm">Toxicología • Base de datos</p>
-              </div>
-            </div>
-            <span class="material-symbols-outlined text-outline">chevron_right</span>
-          </li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- ===== GUÍAS CLÍNICAS ===== -->
-    <section class="animate-fade-in-up" style="animation-delay: 200ms;">
-      <div class="flex items-center justify-between mb-3 px-1">
-        <h3 class="font-headline-md text-headline-md flex items-center gap-2 text-on-surface">
-          <span class="material-symbols-outlined text-secondary">fact_check</span>
-          Guías clínicas
-        </h3>
-        <button class="text-primary font-label-md text-label-md hover:underline transition-all hover:scale-105 view-all" data-section="guidelines">Ver todos</button>
-      </div>
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-        <div class="guideline-card relative aspect-square rounded-xl overflow-hidden bg-surface shadow-sm border border-outline-variant group cursor-pointer" data-id="cytology-guide">
-          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
-          <img alt="Microscopio" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4QFtEeQAm3ZNZTf8LEY0ny0GxK7y8J67fY5SBD-8mjRBt4MrgQRu_WuAlHUki9uiqvhHNkgGRyd8Wm_TvuXd8oPecrOH06h7Z-bSO7QwT0q97A1XcLS_fruqAqwVnHTazJ1a3oJVCSqVdCToCw7hRlSPYxV3OUk2WfLGroRl2K8Xvtl9HLMts25DHGPoSJM1P5YZdF7jSzVbpot2y9xTTddGRmrGz5eCmNaUNfpbddHSBCLQZDXq0hBE1KTv1WZTdByU9tNFqGIsJ" />
-          <div class="absolute bottom-3 left-3 right-3 z-20 text-white">
-            <p class="font-label-sm text-label-sm uppercase tracking-tighter opacity-80">Citología</p>
-            <p class="font-headline-md text-[14px] leading-tight">Guía de aspiración de masas</p>
-          </div>
-        </div>
-        <div class="guideline-card relative aspect-square rounded-xl overflow-hidden bg-surface shadow-sm border border-outline-variant group cursor-pointer" data-id="radiology-guide">
-          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
-          <img alt="Equipo de radiología" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCt9N_z6iTZmtxCDFcDKOFwi4hZ6ZSFyYtDZLwKGSinqu76DXC5J078PKVHFIbJaR2lRv9ZvX_SrrBkj7KnTQrsjVFRY3D9BVcrGMKYBoAS5_EO9YnDb-PrcC57adCc0sgwnc8a_KOaglbpLIUisvUQMdocy0d4FSlDPPlKW-Q2RAqifLNCTdRSoLkROSgTJw-6Zi0X0R_Xj515PG7v4MNquUPun_2lQWQd9K171JUCIVua6HoikD97nNU3zsrO79cJxQcvPDIQ83ON" />
-          <div class="absolute bottom-3 left-3 right-3 z-20 text-white">
-            <p class="font-label-sm text-label-sm uppercase tracking-tighter opacity-80">Radiología</p>
-            <p class="font-headline-md text-[14px] leading-tight">Estándares de posicionamiento</p>
-          </div>
-        </div>
-        <div class="guideline-card relative aspect-square rounded-xl overflow-hidden bg-surface shadow-sm border border-outline-variant group cursor-pointer" data-id="ckd-guide">
-          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
-          <img alt="Estetoscopio" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9Ul9aKCVbbulGvYbwY4Pchv_MjnhUTba6ircSiblK3QrQMyLwXC6B9kNw_6IQ6ndibn7ryISOUzMCHPCWFRWVa74V_658OQdJXSq1wrqMD__kUA7Qmh2xsCDFJBJSjx_EXGfAGVVKFPl5oc0o6OD0iRVQ4T6tQ_yWKpNxeThP9vSxCUSDO67HAWZ9NuB7Q2vwgn_nIZdITwLfLcPVqU47P9NB8EhW0u2EaTW4Jd8fLNx6E6gYUtceUyVA7tzWZIrCEgAvqUJ7QnUw" />
-          <div class="absolute bottom-3 left-3 right-3 z-20 text-white">
-            <p class="font-label-sm text-label-sm uppercase tracking-tighter opacity-80">Medicina Interna</p>
-            <p class="font-headline-md text-[14px] leading-tight">Manejo de ERC</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== BANNER PRO ===== -->
-    <section class="mt-6 animate-fade-in-up" style="animation-delay: 250ms;">
-      <div class="bg-tertiary-container/20 backdrop-blur-sm text-on-tertiary-container rounded-2xl p-4 flex items-center justify-between border border-tertiary/30 shadow-sm">
-        <div class="flex items-center gap-3">
-          <span class="material-symbols-outlined text-tertiary text-3xl" style="font-variation-settings: 'FILL' 1;">star</span>
-          <div>
-            <h4 class="font-label-md text-label-md font-bold text-on-surface">Biblioteca VetCalc PRO</h4>
-            <p class="font-label-sm text-label-sm text-on-surface-variant">Accede a más de 200 guías especializadas exclusivas</p>
-          </div>
-        </div>
-        <button class="bg-tertiary text-white px-4 py-2 rounded-lg font-label-md text-label-md shadow-sm hover:shadow-md transition-all hover:scale-105" id="upgrade-btn">Mejorar</button>
-      </div>
-    </section>
-  </div>
 </main>
 
+<!-- ===== BARRA DE NAVEGACIÓN INFERIOR ===== -->
 <nav class="fixed bottom-0 left-0 right-0 flex justify-around items-center px-2 pb-safe bg-surface/90 backdrop-blur-sm dark:bg-surface h-[68px] z-50 shadow-[0px_-4px_20px_rgba(0,0,0,0.06)]">
   
   <a class="flex flex-col items-center justify-center text-on-surface-variant pt-2 transition-all duration-300 ease-out hover:text-primary hover:-translate-y-1 hover:bg-primary/5 rounded-lg px-3 active:scale-95 group" href="#" data-route="home">
@@ -223,8 +130,8 @@ export const LibraryTemplate = `
   </a>
 
   <a class="relative flex flex-col items-center justify-center text-primary font-bold border-t-2 border-primary pt-2 -translate-y-1 shadow-sm transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-md active:scale-95 group" href="#" data-route="library">
-    <span class="material-symbols-outlined transition-transform duration-300 group-hover:scale-110" style="font-variation-settings: 'FILL' 1;">menu_book</span>
-    <span class="font-label-sm text-label-sm mt-0.5">Biblioteca</span>
+    <span class="material-symbols-outlined transition-transform duration-300 group-hover:scale-110" style="font-variation-settings: 'FILL' 1;">calendar_month</span>
+    <span class="font-label-sm text-label-sm mt-0.5">Citas</span>
     <span class="absolute -top-0.5 w-1.5 h-1.5 rounded-full bg-primary animate-pulse-soft"></span>
   </a>
 
