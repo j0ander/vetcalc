@@ -45,7 +45,7 @@ export class HomeController extends BaseController implements Destroyable {
 
     this.setupGlobalNavigation();
     this.initPremiumBadge();
-    
+
     // ✅ Actualizar saludo con el nombre del usuario
     this.setupElements();
     this.updateGreeting();
@@ -65,15 +65,14 @@ export class HomeController extends BaseController implements Destroyable {
     console.log('[HomeController] Destroyed')
   }
 
-  // ✅ Nuevo método para actualizar el saludo
   private updateGreeting(): void {
     const user = authService.getCurrentUser();
     const greetingEl = this.view.getGreetingElement();
     if (greetingEl) {
       if (user?.name) {
-        greetingEl.textContent = `Hola, ${user.name}`;
+        greetingEl.textContent = `Bienvenido, ${user.name}`;
       } else {
-        greetingEl.textContent = 'Hola, Dr. Smith'; // fallback
+        greetingEl.textContent = 'Bienvenido, Dr. Smith'; // fallback
       }
     }
   }

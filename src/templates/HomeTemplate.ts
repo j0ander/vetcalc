@@ -50,10 +50,10 @@ export const HomeTemplate = `
 
   <!-- ===== BANNER ===== -->
   <section class="relative w-full rounded-2xl overflow-hidden shadow-elevated animate-fade-in-up group min-h-[160px] md:min-h-[425px]"
-           style="background-image: url('/icons/Animales/gato5.png'); background-size: cover; background-position: top;">
+         style="background-image: url('/icons/Animales/gato5.png'); background-size: cover; background-position: top;">
     <div class="absolute inset-0 bg-gradient-to-r from-primary/70 to-secondary/70 mix-blend-multiply"></div>
     <div class="absolute inset-0 flex flex-col justify-center px-6 text-white">
-      <h2 class="font-headline-lg text-headline-lg md:text-headline-xl drop-shadow-md">Bienvenido, Dr. Smith</h2>
+      <h2 id="greeting" class="font-headline-lg text-headline-lg md:text-headline-xl drop-shadow-md">Bienvenido, Dr. Smith</h2>
       <p class="font-body-md text-body-md opacity-90">Panel clínico • Hoy tienes 4 pacientes agendados</p>
     </div>
   </section>
