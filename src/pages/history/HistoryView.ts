@@ -2,7 +2,7 @@ import { HistoryTemplate } from '@/templates/HistoryTemplate';
 
 export interface HistoryRecord {
   id: string;
-  type: string; // 'dosage', 'fluidotherapy', 'anesthesia', etc.
+  type: string;
   title: string;
   patientName: string;
   species: string;
@@ -18,6 +18,12 @@ export class HistoryView {
   private filterButtons: NodeListOf<Element> | null = null;
   private loadMoreBtn: HTMLElement | null = null;
   private searchFab: HTMLElement | null = null;
+  private detailModal: HTMLElement | null = null;
+  private closeDetailBtn: HTMLElement | null = null;
+  private deleteBtn: HTMLElement | null = null;
+
+  // Callback para clic en un ítem
+  private onItemClickCallback: ((id: string) => void) | null = null;
 
   render(): void {
     const app = document.getElementById('app');
@@ -32,8 +38,12 @@ export class HistoryView {
     this.filterButtons = document.querySelectorAll('#filter-buttons button');
     this.loadMoreBtn = document.getElementById('load-more-btn');
     this.searchFab = document.getElementById('search-fab');
+    this.detailModal = document.getElementById('history-detail-modal');
+    this.closeDetailBtn = document.getElementById('close-history-detail-btn');
+    this.deleteBtn = document.getElementById('delete-history-btn');
   }
 
+  // ===== GETTERS =====
   getHistoryContainer(): HTMLElement | null {
     return this.historyContainer;
   }
@@ -50,6 +60,160 @@ export class HistoryView {
     return this.searchFab;
   }
 
+  // ===== REGISTRAR CALLBACK PARA CLIC EN ÍTEM =====
+  onItemClick(callback: (id: string) => void): void {
+    this.onItemClickCallback = callback;
+  }
+
+  // ===== MOSTRAR DETALLE EN MODAL (versión mejorada, sin JSON) =====
+  showDetail(record: any): void {
+    if (!this.detailModal) return;
+
+    const typeLabel = this.getTypeLabel(record.type);
+    const dateStr = new Date(record.createdAt).toLocaleString('es-ES', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+
+    // Construir el contenido HTML según el tipo
+    let detailsHtml = `
+      <div class="border-b border-outline-variant/30 pb-2">
+        <p class="font-label-sm text-label-sm text-on-surface-variant">Tipo</p>
+        <p class="font-headline-md text-headline-md text-primary">${typeLabel}</p>
+      </div>
+      <div class="border-b border-outline-variant/30 pb-2">
+        <p class="font-label-sm text-label-sm text-on-surface-variant">Paciente</p>
+        <p class="font-body-md text-body-md text-on-surface">${record.patientName || 'N/A'}</p>
+      </div>
+      <div class="border-b border-outline-variant/30 pb-2">
+        <p class="font-label-sm text-label-sm text-on-surface-variant">Peso</p>
+        <p class="font-body-md text-body-md text-on-surface">${record.patientWeightKg ? `${record.patientWeightKg} kg` : 'N/A'}</p>
+      </div>
+      <div class="border-b border-outline-variant/30 pb-2">
+        <p class="font-label-sm text-label-sm text-on-surface-variant">Fecha</p>
+        <p class="font-body-md text-body-md text-on-surface">${dateStr}</p>
+      </div>
+      <div class="border-b border-outline-variant/30 pb-2">
+        <p class="font-label-sm text-label-sm text-on-surface-variant">Resumen</p>
+        <p class="font-body-md text-body-md text-on-surface">${record.summary || 'N/A'}</p>
+      </div>
+    `;
+
+    const inputs = record.inputs || {};
+    const result = record.result || {};
+
+    // Detalles específicos por tipo
+    switch (record.type) {
+      case 'dosage':
+        detailsHtml += `
+          <div class="border-b border-outline-variant/30 pb-2">
+            <p class="font-label-sm text-label-sm text-on-surface-variant">Dosis (mg/kg)</p>
+            <p class="font-body-md text-body-md text-on-surface">${inputs.dosePerKg || 'N/A'}</p>
+          </div>
+          <div class="border-b border-outline-variant/30 pb-2">
+            <p class="font-label-sm text-label-sm text-on-surface-variant">Concentración (mg/mL)</p>
+            <p class="font-body-md text-body-md text-on-surface">${inputs.concentration || 'N/A'}</p>
+          </div>
+          <div>
+            <p class="font-label-sm text-label-sm text-on-surface-variant">Volumen calculado</p>
+            <p class="font-headline-md text-headline-md text-primary">${result.volumeMl ? `${result.volumeMl.toFixed(2)} mL` : 'N/A'}</p>
+          </div>
+        `;
+        break;
+
+      case 'fluidotherapy':
+        detailsHtml += `
+          <div class="border-b border-outline-variant/30 pb-2">
+            <p class="font-label-sm text-label-sm text-on-surface-variant">Deshidratación (%)</p>
+            <p class="font-body-md text-body-md text-on-surface">${inputs.dehydrationPercent || 'N/A'}</p>
+          </div>
+          <div class="border-b border-outline-variant/30 pb-2">
+            <p class="font-label-sm text-label-sm text-on-surface-variant">Mantenimiento (ml/kg/día)</p>
+            <p class="font-body-md text-body-md text-on-surface">${inputs.maintenanceMlKgDay || 'N/A'}</p>
+          </div>
+          <div class="border-b border-outline-variant/30 pb-2">
+            <p class="font-label-sm text-label-sm text-on-surface-variant">Factor de goteo</p>
+            <p class="font-body-md text-body-md text-on-surface">${inputs.dripFactor || 'N/A'} gotas/ml</p>
+          </div>
+          <div>
+            <p class="font-label-sm text-label-sm text-on-surface-variant">Volumen total (24h)</p>
+            <p class="font-headline-md text-headline-md text-primary">${result.totalMl ? `${result.totalMl.toFixed(1)} mL` : 'N/A'}</p>
+          </div>
+        `;
+        break;
+
+      case 'anesthesia':
+        const drugs = inputs.drugs || [];
+        const drugList = drugs.map((d: any) =>
+          `${d.name} (${d.dosePerKg} mg/kg → ${(d.dosePerKg * (record.patientWeightKg || 0)).toFixed(2)} mg, ${((d.dosePerKg * (record.patientWeightKg || 0)) / d.concentration).toFixed(2)} mL)`
+        ).join('<br>');
+
+        detailsHtml += `
+          <div class="border-b border-outline-variant/30 pb-2">
+            <p class="font-label-sm text-label-sm text-on-surface-variant">ASA Status</p>
+            <p class="font-body-md text-body-md text-on-surface">${inputs.asaStatus || 'N/A'}</p>
+          </div>
+          <div class="border-b border-outline-variant/30 pb-2">
+            <p class="font-label-sm text-label-sm text-on-surface-variant">Fármacos seleccionados</p>
+            <p class="font-body-md text-body-md text-on-surface">${drugList || 'Ninguno'}</p>
+          </div>
+          <div>
+            <p class="font-label-sm text-label-sm text-on-surface-variant">Fluidos estimados</p>
+            <p class="font-headline-md text-headline-md text-primary">${result.totalFluids ? `${result.totalFluids.toFixed(1)} mL` : 'N/A'}</p>
+          </div>
+        `;
+        break;
+
+      default:
+        // Para otros tipos (conversión, etc.) mostrar datos genéricos
+        detailsHtml += `
+          <div class="border-b border-outline-variant/30 pb-2">
+            <p class="font-label-sm text-label-sm text-on-surface-variant">Datos de entrada</p>
+            <p class="font-body-md text-body-md text-on-surface">${JSON.stringify(inputs, null, 2)}</p>
+          </div>
+          <div>
+            <p class="font-label-sm text-label-sm text-on-surface-variant">Resultado</p>
+            <p class="font-body-md text-body-md text-on-surface">${JSON.stringify(result, null, 2)}</p>
+          </div>
+        `;
+        break;
+    }
+
+    // Insertar en el contenedor del modal
+    const content = document.getElementById('detail-content');
+    if (content) {
+      content.innerHTML = detailsHtml;
+    }
+
+    // Guardar ID para eliminación
+    this.detailModal.setAttribute('data-id', record.id.toString());
+    this.detailModal.classList.remove('hidden');
+  }
+
+  hideDetail(): void {
+    if (this.detailModal) {
+      this.detailModal.classList.add('hidden');
+    }
+  }
+
+  // ===== EVENTOS DEL MODAL =====
+  onCloseDetail(callback: () => void): void {
+    this.closeDetailBtn?.addEventListener('click', callback);
+  }
+
+  onDeleteDetail(callback: (id: number) => void): void {
+    this.deleteBtn?.addEventListener('click', () => {
+      const id = this.detailModal?.getAttribute('data-id');
+      if (id) {
+        callback(parseInt(id, 10));
+      }
+    });
+  }
+
+  // ===== RENDERIZAR LISTA DE HISTORIAL =====
   renderHistoryList(records: HistoryRecord[], currentFilter: string): void {
     if (!this.historyContainer) return;
     if (records.length === 0) {
@@ -62,7 +226,6 @@ export class HistoryView {
       return;
     }
 
-    // Agrupar por fecha
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const yesterday = new Date(today);
@@ -92,12 +255,13 @@ export class HistoryView {
 
     this.historyContainer.innerHTML = html;
 
-    // Event listeners para cada tarjeta (navegación a detalle)
-    document.querySelectorAll('.history-card').forEach(card => {
-      card.addEventListener('click', (e) => {
-        const recordId = card.getAttribute('data-id');
-        console.log(`[History] Ver detalle de registro: ${recordId}`);
-        // Aquí se podría navegar a una vista de detalle
+    // Asignar eventos de clic a cada tarjeta
+    this.historyContainer.querySelectorAll('.history-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const id = card.getAttribute('data-id');
+        if (id && this.onItemClickCallback) {
+          this.onItemClickCallback(id);
+        }
       });
     });
   }
@@ -133,6 +297,17 @@ export class HistoryView {
         </div>
       `;
     }).join('');
+  }
+
+  // ===== UTILIDADES =====
+  private getTypeLabel(type: string): string {
+    const labels: Record<string, string> = {
+      dosage: 'Cálculo de Dosis',
+      fluidotherapy: 'Fluidoterapia',
+      anesthesia: 'Protocolo de Anestesia',
+      converter: 'Conversión'
+    };
+    return labels[type] || type;
   }
 
   private getBorderColorForType(type: string): string {
@@ -184,13 +359,6 @@ export class HistoryView {
     return `Hace ${diffDays} días`;
   }
 
-  private escapeHtml(str: string): string {
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
-  }
-
-  // Actualizar estilo de filtro activo (alineado con el template: bg-secondary para activo, bg-white/80 para inactivos)
   setActiveFilter(filter: string): void {
     this.filterButtons?.forEach(btn => {
       const btnFilter = btn.getAttribute('data-filter');
@@ -202,5 +370,11 @@ export class HistoryView {
         btn.classList.add('bg-white/80', 'text-on-surface-variant', 'border', 'border-outline-variant');
       }
     });
+  }
+
+  private escapeHtml(str: string): string {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
   }
 }

@@ -2,6 +2,7 @@ import { DosageView } from './DosageView';
 import { router, type Destroyable } from '@/services/RouterService';
 import { BaseController } from '@/controllers/BaseController';
 import type { AppRoute } from '@/types';
+import { saveToHistory } from '@/services/HistoryService';
 
 export class DosageController extends BaseController implements Destroyable {
   private view: DosageView;
@@ -59,15 +60,30 @@ export class DosageController extends BaseController implements Destroyable {
     this.view.showResult(totalMg, volumeMl);
   }
 
-  private saveToHistory(): void {
-    console.log('Guardar cálculo en historial:', {
-      drug: this.view.getDrugName(),
-      weight: this.view.getWeight(),
-      dosagePerKg: this.view.getDosageMgPerKg(),
-      concentration: this.view.getConcentrationMgPerMl(),
-      timestamp: new Date().toISOString()
+  private async saveToHistory(): Promise<void> {
+    const weight = this.view.getWeight();
+    const dosePerKg = this.view.getDosageMgPerKg();
+    const concentration = this.view.getConcentrationMgPerMl();
+    const drugName = this.view.getDrugName() || 'Medicamento';
+
+    if (weight <= 0 || dosePerKg <= 0 || concentration <= 0) {
+      alert('Primero realice un cálculo válido antes de guardar.');
+      return;
+    }
+
+    const totalMg = weight * dosePerKg;
+    const volumeMl = totalMg / concentration;
+
+    await saveToHistory({
+      type: 'dosage',
+      patientName: 'Paciente (sin nombre)',
+      patientWeightKg: weight,
+      inputs: { weight, dosePerKg, concentration, drug: drugName },
+      result: { totalMg, volumeMl },
+      summary: `${drugName} — ${totalMg.toFixed(2)} mg · ${volumeMl.toFixed(2)} mL`
     });
-    alert('Cálculo guardado en el historial (simulado).');
+
+    alert('Cálculo guardado en el historial.');
   }
 
   destroy(): void {

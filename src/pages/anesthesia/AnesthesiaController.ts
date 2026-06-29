@@ -1,6 +1,8 @@
+// src/pages/anesthesia/AnesthesiaController.ts
 import { AnesthesiaView, Drug } from './AnesthesiaView';
 import { router, type Destroyable } from '@/services/RouterService';
 import { BaseController } from '@/controllers/BaseController';
+import { saveToHistory } from '@/services/HistoryService';
 import type { AppRoute } from '@/types';
 
 export class AnesthesiaController extends BaseController implements Destroyable {
@@ -20,20 +22,50 @@ export class AnesthesiaController extends BaseController implements Destroyable 
 
   async init(): Promise<void> {
     this.view.render();
-    this.setupGlobalNavigation(); // Navegación global para data-route
+    this.setupGlobalNavigation();
     this.initPremiumBadge();
     this.setupEventListeners();
     this.renderDrugLists();
     this.updateSummaryAndFluids();
-    this.setupExpandPanel(); // Control del panel expandible
+    this.setupExpandPanel();
   }
 
   private setupEventListeners(): void {
-    // Botón finalizar
+    // Botón finalizar -> guardar en historial
     const finalizeBtn = this.view.getFinalizeBtn();
-    finalizeBtn?.addEventListener('click', () => {
-      alert('Protocolo guardado (simulación)');
-      console.log('Protocolo finalizado:', this.drugs.filter(d => d.selected));
+    finalizeBtn?.addEventListener('click', async () => {
+      const selectedDrugs = this.drugs.filter(d => d.selected);
+      if (selectedDrugs.length === 0) {
+        alert('Debe seleccionar al menos un fármaco para guardar el protocolo.');
+        return;
+      }
+
+      // Construir resumen
+      const drugSummaries = selectedDrugs.map(d =>
+        `${d.name} (${d.dosePerKg} mg/kg → ${(d.dosePerKg * this.weightKg).toFixed(2)} mg, ${((d.dosePerKg * this.weightKg) / d.concentration).toFixed(2)} mL)`
+      ).join('; ');
+
+      const totalFluids = this.weightKg * 5; // ejemplo, 5 mL/kg/h
+
+      await saveToHistory({
+        type: 'anesthesia',
+        patientName: 'Paciente (sin nombre)', // podrías obtenerlo de un campo si existe
+        patientWeightKg: this.weightKg,
+        patientSpecies: 'canino', // mock
+        inputs: {
+          weightKg: this.weightKg,
+          asaStatus: this.asaStatus,
+          drugs: selectedDrugs.map(d => ({ name: d.name, dosePerKg: d.dosePerKg, concentration: d.concentration }))
+        },
+        result: {
+          selectedDrugs: selectedDrugs.map(d => ({ name: d.name, totalMg: d.dosePerKg * this.weightKg, volumeMl: (d.dosePerKg * this.weightKg) / d.concentration })),
+          totalFluids: totalFluids
+        },
+        summary: `Protocolo de anestesia: ${selectedDrugs.length} fármacos, fluidos estimados ${totalFluids.toFixed(1)} mL`
+      });
+
+      alert('Protocolo guardado en el historial.');
+      console.log('Protocolo finalizado:', selectedDrugs);
     });
 
     // Botón imprimir PDF

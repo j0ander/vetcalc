@@ -5,7 +5,8 @@ import { mockDataService } from '@/services/MockDataService'
 import { VET_TIPS } from '@/constants'
 import type { AppRoute, Patient, CalculationRecord } from '@/types'
 import { BaseController } from '@/controllers/BaseController'
-import { authService } from '@/services/AuthService' // ✅ Importado
+import { authService } from '@/services/AuthService'
+import { db } from '@/database/VetCalcDB' // ✅ Importar DB
 
 export class HomeController extends BaseController implements Destroyable {
   private view: HomeView
@@ -25,75 +26,64 @@ export class HomeController extends BaseController implements Destroyable {
   }
 
   async init(): Promise<void> {
-    this.view.render();
+    this.view.render()
 
-    // Efecto ripple en las tarjetas
+    // Efecto ripple
     document.querySelectorAll('.glass-card').forEach((card) => {
-      const htmlCard = card as HTMLElement;
+      const htmlCard = card as HTMLElement
       htmlCard.addEventListener('click', (mouseEvent: MouseEvent) => {
-        const ripple = document.createElement('span');
-        ripple.classList.add('ripple');
-        htmlCard.appendChild(ripple);
-        const rect = htmlCard.getBoundingClientRect();
-        const x = mouseEvent.clientX - rect.left;
-        const y = mouseEvent.clientY - rect.top;
-        ripple.style.left = `${x}px`;
-        ripple.style.top = `${y}px`;
-        setTimeout(() => ripple.remove(), 600);
-      });
-    });
+        const ripple = document.createElement('span')
+        ripple.classList.add('ripple')
+        htmlCard.appendChild(ripple)
+        const rect = htmlCard.getBoundingClientRect()
+        const x = mouseEvent.clientX - rect.left
+        const y = mouseEvent.clientY - rect.top
+        ripple.style.left = `${x}px`
+        ripple.style.top = `${y}px`
+        setTimeout(() => ripple.remove(), 600)
+      })
+    })
 
-    this.setupGlobalNavigation();
-    this.initPremiumBadge();
+    this.setupGlobalNavigation()
+    this.initPremiumBadge()
+    this.setupElements()
+    this.updateGreeting()
+    this.setupSpecificListeners()
 
-    // ✅ Actualizar saludo con el nombre del usuario
-    this.setupElements();
-    this.updateGreeting();
+    // ✅ Cargar datos reales desde IndexedDB
+    await this.loadRecentPatients()
+    await this.loadRecentHistory()
+    await this.updateStats()
 
-    this.setupSpecificListeners();
-    this.renderRecentPatients();
-    this.renderRecentHistory();
-    this.renderTipOfTheDay();
-    this.setupConnectivityMonitoring();
-    this.updateOnlineStatus(navigator.onLine);
+    this.renderTipOfTheDay()
+    this.setupConnectivityMonitoring()
+    this.updateOnlineStatus(navigator.onLine)
   }
 
   destroy(): void {
     window.removeEventListener('online', this.onlineHandler)
     window.removeEventListener('offline', this.offlineHandler)
-    this.destroyPremiumBadge();
+    this.destroyPremiumBadge()
     console.log('[HomeController] Destroyed')
   }
 
   private updateGreeting(): void {
-    const user = authService.getCurrentUser();
-    const greetingEl = this.view.getGreetingElement();
+    const user = authService.getCurrentUser()
+    const greetingEl = this.view.getGreetingElement()
     if (greetingEl) {
-      if (user?.name) {
-        greetingEl.textContent = `Bienvenido, ${user.name}`;
-      } else {
-        greetingEl.textContent = 'Bienvenido, Dr. Smith'; // fallback
-      }
+      greetingEl.textContent = user?.name ? `Bienvenido, ${user.name}` : 'Bienvenido, Dr. Smith'
     }
   }
 
   private setupSpecificListeners(): void {
-    const searchBtn = this.view.getSearchButton();
-    if (searchBtn) {
-      searchBtn.addEventListener('click', () => console.log('[Home] Search clicked'));
-    }
-    const profileBtn = this.view.getProfileButton();
-    if (profileBtn) {
-      profileBtn.addEventListener('click', () => console.log('[Home] Profile clicked'));
-    }
-    const viewAllHistory = this.view.getViewAllHistoryButton();
-    if (viewAllHistory) {
-      viewAllHistory.addEventListener('click', async () => this.navigateToModule('history'));
-    }
-    const viewAllPatients = this.view.getViewAllPatientsButton();
-    if (viewAllPatients) {
-      viewAllPatients.addEventListener('click', async () => this.navigateToModule('patients'));
-    }
+    const searchBtn = this.view.getSearchButton()
+    if (searchBtn) searchBtn.addEventListener('click', () => console.log('[Home] Search clicked'))
+    const profileBtn = this.view.getProfileButton()
+    if (profileBtn) profileBtn.addEventListener('click', () => console.log('[Home] Profile clicked'))
+    const viewAllHistory = this.view.getViewAllHistoryButton()
+    if (viewAllHistory) viewAllHistory.addEventListener('click', async () => this.navigateToModule('history'))
+    const viewAllPatients = this.view.getViewAllPatientsButton()
+    if (viewAllPatients) viewAllPatients.addEventListener('click', async () => this.navigateToModule('patients'))
   }
 
   private setupElements(): void {
@@ -105,8 +95,43 @@ export class HomeController extends BaseController implements Destroyable {
     await router.navigate(route)
   }
 
-  private renderRecentPatients(): void {
-    const patients = mockDataService.getRecentPatients(4)
+  // ===== CARGAR PACIENTES RECIENTES (desde DB o fallback) =====
+  private async loadRecentPatients(): Promise<void> {
+    const container = this.view.getRecentPatientsContainer()
+    if (!container) return
+
+    try {
+      // Obtener pacientes desde IndexedDB (ordenar por fecha de creación descendente)
+      const dbPatients = await db.patients.orderBy('createdAt').reverse().limit(4).toArray()
+
+      if (dbPatients.length > 0) {
+        // Convertir DBPatient a Patient (con id como string)
+        const patientsForView: Patient[] = dbPatients.map(p => ({
+          id: p.id!.toString(),
+          name: p.name,
+          species: p.species as any,
+          breed: p.breed,
+          weightKg: p.weightKg,
+          ageMonths: p.ageMonths,
+          ownerName: p.ownerName,
+          status: p.status as any,
+          observations: p.observations,
+          createdAt: p.createdAt,
+          updatedAt: p.updatedAt
+        }))
+        this.renderPatients(patientsForView)
+        return
+      }
+    } catch (error) {
+      console.error('[Home] Error cargando pacientes desde DB:', error)
+    }
+
+    // Fallback: usar MockDataService
+    const mockPatients = mockDataService.getRecentPatients(4)
+    this.renderPatients(mockPatients)
+  }
+
+  private renderPatients(patients: Patient[]): void {
     const container = this.view.getRecentPatientsContainer()
     if (!container) return
     container.innerHTML = ''
@@ -134,8 +159,42 @@ export class HomeController extends BaseController implements Destroyable {
     return div
   }
 
-  private renderRecentHistory(): void {
-    const history = mockDataService.getRecentHistory(2)
+  // ===== CARGAR HISTORIAL RECIENTE (desde DB o fallback) =====
+  private async loadRecentHistory(): Promise<void> {
+    const container = this.view.getRecentHistoryContainer()
+    if (!container) return
+
+    try {
+      // Obtener historial desde IndexedDB (ordenar por fecha descendente)
+      const dbHistory = await db.calculationHistory.orderBy('createdAt').reverse().limit(4).toArray()
+
+      if (dbHistory.length > 0) {
+        // Convertir DB CalculationRecord a tipo CalculationRecord (con id como string)
+        const historyForView: CalculationRecord[] = dbHistory.map(record => ({
+          id: record.id!.toString(),
+          type: record.type as any,
+          patientId: record.patientId,
+          patientName: record.patientName,
+          patientSpecies: record.patientSpecies as any,
+          patientWeightKg: record.patientWeightKg,
+          inputs: record.inputs,
+          result: record.result,
+          summary: record.summary,
+          createdAt: record.createdAt
+        }))
+        this.renderHistory(historyForView)
+        return
+      }
+    } catch (error) {
+      console.error('[Home] Error cargando historial desde DB:', error)
+    }
+
+    // Fallback: usar MockDataService
+    const mockHistory = mockDataService.getRecentHistory(4)
+    this.renderHistory(mockHistory)
+  }
+
+  private renderHistory(history: CalculationRecord[]): void {
     const container = this.view.getRecentHistoryContainer()
     if (!container) return
     container.innerHTML = ''
@@ -187,6 +246,29 @@ export class HomeController extends BaseController implements Destroyable {
     if (diffMins < 60) return `${diffMins}m ago`
     if (diffHours < 24) return `${diffHours}h ago`
     return `${diffDays}d ago`
+  }
+
+  // ===== ACTUALIZAR ESTADÍSTICAS (total pacientes y cálculos) =====
+  private async updateStats(): Promise<void> {
+    try {
+      const patientCount = await db.patients.count()
+      const calcCount = await db.calculationHistory.count()
+
+      // Actualizar los spans en el template (por ID)
+      const patientsSpan = document.querySelector('.flex.gap-6 .text-center:first-child .font-headline-md')
+      const calcSpan = document.querySelector('.flex.gap-6 .text-center:last-child .font-headline-md')
+
+      if (patientsSpan) patientsSpan.textContent = patientCount.toString()
+      if (calcSpan) calcSpan.textContent = calcCount.toString()
+    } catch (error) {
+      console.error('[Home] Error actualizando estadísticas:', error)
+      // Fallback a valores mock
+      const stats = mockDataService.getDashboardStats()
+      const patientsSpan = document.querySelector('.flex.gap-6 .text-center:first-child .font-headline-md')
+      const calcSpan = document.querySelector('.flex.gap-6 .text-center:last-child .font-headline-md')
+      if (patientsSpan) patientsSpan.textContent = stats.activeCases.toString()
+      if (calcSpan) calcSpan.textContent = stats.todayCalculations.toString()
+    }
   }
 
   private renderTipOfTheDay(): void {

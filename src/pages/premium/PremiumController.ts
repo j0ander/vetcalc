@@ -1,3 +1,4 @@
+// src/pages/premium/PremiumController.ts
 import { PremiumView } from './PremiumView';
 import { router, type Destroyable } from '@/services/RouterService';
 import type { AppRoute } from '@/types';
@@ -34,22 +35,21 @@ export class PremiumController implements Destroyable {
     monthlyBtn?.addEventListener('click', () => this.view.setMonthlyActive());
     annualBtn?.addEventListener('click', () => this.view.setAnnualActive());
 
-    // Botón de upgrade
+    // Botón de upgrade -> redirigir a PayPal
     const upgradeBtn = this.view.getUpgradeBtn();
     upgradeBtn?.addEventListener('click', () => {
-      // Aquí se integraría el flujo de pago real (Stripe, etc.)
-      alert('Funcionalidad de pago en desarrollo. Esta es una simulación.');
-      console.log('Iniciar proceso de suscripción Pro');
+      // Abrir el enlace de PayPal en una nueva pestaña
+      window.open('https://www.paypal.com/ncp/payment/JTEUETNL8PPXY', '_blank');
     });
 
-    // Restaurar compra (si aplica)
+    // Restaurar compra (simulación)
     const restoreBtn = this.view.getRestoreBtn();
     restoreBtn?.addEventListener('click', () => {
       alert('Restauración de compra simulada');
       console.log('Restaurar compra');
     });
   }
-
+  
   destroy(): void {
     console.log('[PremiumController] Destroyed');
   }

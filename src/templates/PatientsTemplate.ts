@@ -90,7 +90,120 @@ export const PatientsTemplate = `
   </section>
 
 </main>
+  <!-- ===== MODAL PARA AÑADIR PACIENTE ===== -->
+  <div id="add-patient-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm hidden animate-fade-in-up">
+    <div class="bg-white/90 backdrop-blur-sm rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl border border-outline-variant">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="font-headline-md text-headline-md text-on-surface">Nuevo Paciente</h3>
+        <button id="close-modal-btn" class="p-2 rounded-full hover:bg-surface-container-high transition-colors">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <form id="add-patient-form" class="space-y-4">
+        <!-- Nombre -->
+        <div>
+          <label class="font-label-sm text-label-sm text-on-surface-variant block mb-1">Nombre</label>
+          <input type="text" id="patient-name" class="w-full h-touch-target-min px-4 bg-white/50 border border-outline-variant rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all" placeholder="Nombre de la mascota">
+        </div>
 
+        <!-- Especie -->
+        <div>
+          <label class="font-label-sm text-label-sm text-on-surface-variant block mb-1">Especie</label>
+          <select id="patient-species" class="w-full h-touch-target-min px-4 bg-white/50 border border-outline-variant rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all">
+            <option value="canine">Perro</option>
+            <option value="feline">Gato</option>
+            <option value="equine">Caballo</option>
+            <option value="bovine">Vaca</option>
+            <option value="avian">Ave</option>
+            <option value="exotic">Exótico</option>
+          </select>
+        </div>
+
+        <!-- Raza -->
+        <div>
+          <label class="font-label-sm text-label-sm text-on-surface-variant block mb-1">Raza</label>
+          <input type="text" id="patient-breed" class="w-full h-touch-target-min px-4 bg-white/50 border border-outline-variant rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all" placeholder="Ej: Golden Retriever">
+        </div>
+
+        <!-- Edad (NUEVO) -->
+        <div>
+          <label class="font-label-sm text-label-sm text-on-surface-variant block mb-1">Edad (meses)</label>
+          <input type="number" id="patient-age" step="1" class="w-full h-touch-target-min px-4 bg-white/50 border border-outline-variant rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all" placeholder="0">
+        </div>
+
+        <!-- Peso -->
+        <div>
+          <label class="font-label-sm text-label-sm text-on-surface-variant block mb-1">Peso (kg)</label>
+          <input type="number" id="patient-weight" step="0.1" class="w-full h-touch-target-min px-4 bg-white/50 border border-outline-variant rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all" placeholder="0.0">
+        </div>
+
+        <!-- Propietario -->
+        <div>
+          <label class="font-label-sm text-label-sm text-on-surface-variant block mb-1">Propietario</label>
+          <input type="text" id="patient-owner" class="w-full h-touch-target-min px-4 bg-white/50 border border-outline-variant rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all" placeholder="Nombre del propietario">
+        </div>
+
+        <button type="submit" class="w-full bg-primary text-white h-touch-target-min rounded-xl font-headline-md shadow-sm hover:shadow-md transition-all">Guardar Paciente</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== MODAL PARA EDITAR PACIENTE ===== -->
+<div id="edit-patient-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm hidden animate-fade-in-up">
+  <div class="bg-white/90 backdrop-blur-sm rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl border border-outline-variant">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="font-headline-md text-headline-md text-on-surface">Editar Paciente</h3>
+      <button id="close-edit-modal-btn" class="p-2 rounded-full hover:bg-surface-container-high transition-colors">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    <form id="edit-patient-form" class="space-y-4">
+      <input type="hidden" id="edit-patient-id" />
+      <div>
+        <label class="font-label-sm text-label-sm text-on-surface-variant block mb-1">Nombre</label>
+        <input type="text" id="edit-patient-name" class="w-full h-touch-target-min px-4 bg-white/50 border border-outline-variant rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all">
+      </div>
+      <div>
+        <label class="font-label-sm text-label-sm text-on-surface-variant block mb-1">Especie</label>
+        <select id="edit-patient-species" class="w-full h-touch-target-min px-4 bg-white/50 border border-outline-variant rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all">
+          <option value="canine">Perro</option>
+          <option value="feline">Gato</option>
+          <option value="equine">Caballo</option>
+          <option value="bovine">Vaca</option>
+          <option value="avian">Ave</option>
+          <option value="exotic">Exótico</option>
+        </select>
+      </div>
+      <div>
+        <label class="font-label-sm text-label-sm text-on-surface-variant block mb-1">Raza</label>
+        <input type="text" id="edit-patient-breed" class="w-full h-touch-target-min px-4 bg-white/50 border border-outline-variant rounded-lg">
+      </div>
+      <div>
+        <label class="font-label-sm text-label-sm text-on-surface-variant block mb-1">Edad (meses)</label>
+        <input type="number" id="edit-patient-age" step="1" class="w-full h-touch-target-min px-4 bg-white/50 border border-outline-variant rounded-lg">
+      </div>
+      <div>
+        <label class="font-label-sm text-label-sm text-on-surface-variant block mb-1">Peso (kg)</label>
+        <input type="number" id="edit-patient-weight" step="0.1" class="w-full h-touch-target-min px-4 bg-white/50 border border-outline-variant rounded-lg">
+      </div>
+      <div>
+        <label class="font-label-sm text-label-sm text-on-surface-variant block mb-1">Propietario</label>
+        <input type="text" id="edit-patient-owner" class="w-full h-touch-target-min px-4 bg-white/50 border border-outline-variant rounded-lg">
+      </div>
+      <div>
+        <label class="font-label-sm text-label-sm text-on-surface-variant block mb-1">Estado</label>
+        <select id="edit-patient-status" class="w-full h-touch-target-min px-4 bg-white/50 border border-outline-variant rounded-lg">
+          <option value="stable">Estable</option>
+          <option value="in-surgery">En cirugía</option>
+          <option value="critical">Crítico</option>
+          <option value="discharged">Dado de alta</option>
+          <option value="observation">Observación</option>
+        </select>
+      </div>
+      <button type="submit" class="w-full bg-primary text-white h-touch-target-min rounded-xl font-headline-md shadow-sm hover:shadow-md transition-all">Guardar Cambios</button>
+    </form>
+  </div>
+</div>
 <!-- ===== BOTÓN FLOTANTE AÑADIR ===== -->
 <button class="fixed bottom-24 right-6 w-14 h-14 bg-primary text-white rounded-2xl shadow-lg hover:shadow-xl active:scale-90 transition-all duration-300 z-40 flex items-center justify-center hover:-translate-y-1" id="add-patient-btn">
   <span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">add</span>

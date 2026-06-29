@@ -8,7 +8,12 @@ export class PatientsView {
   private inSurgerySpan: HTMLElement | null = null;
   private seeAllBtn: HTMLElement | null = null;
   private addPatientBtn: HTMLElement | null = null;
-
+  private modal: HTMLElement | null = null;
+  private closeModalBtn: HTMLElement | null = null;
+  private form: HTMLFormElement | null = null;
+  private editModal: HTMLElement | null = null;
+  private closeEditModalBtn: HTMLElement | null = null;
+  private editForm: HTMLFormElement | null = null;
   render(): void {
     const app = document.getElementById('app');
     if (app) {
@@ -24,6 +29,12 @@ export class PatientsView {
     this.inSurgerySpan = document.getElementById('in-surgery');
     this.seeAllBtn = document.getElementById('see-all-btn');
     this.addPatientBtn = document.getElementById('add-patient-btn');
+    this.modal = document.getElementById('add-patient-modal');
+    this.closeModalBtn = document.getElementById('close-modal-btn');
+    this.form = document.getElementById('add-patient-form') as HTMLFormElement;
+    this.editModal = document.getElementById('edit-patient-modal');
+    this.closeEditModalBtn = document.getElementById('close-edit-modal-btn');
+    this.editForm = document.getElementById('edit-patient-form') as HTMLFormElement;
   }
 
   getSearchInput(): HTMLInputElement | null { return this.searchInput; }
@@ -42,17 +53,17 @@ export class PatientsView {
       const card = document.createElement('div');
       card.className = 'bg-surface-container-lowest p-4 rounded-xl shadow-[0px_2px_8px_rgba(38,50,56,0.08)] flex items-center gap-4 active:scale-[0.98] transition-transform cursor-pointer relative overflow-hidden';
       card.setAttribute('data-id', patient.id);
-      
+
       // Imagen placeholder (usamos ícono en lugar de imagen real para evitar URLs externas)
       const speciesIcon = patient.species === 'canine' ? 'pets' : (patient.species === 'feline' ? 'pets' : 'pets');
       const statusClass = patient.status === 'stable' ? 'bg-secondary-container text-on-secondary-container' :
-                          patient.status === 'in-surgery' ? 'bg-error-container text-on-error-container' :
-                          'bg-surface-container-highest text-on-surface-variant';
+        patient.status === 'in-surgery' ? 'bg-error-container text-on-error-container' :
+          'bg-surface-container-highest text-on-surface-variant';
       const statusText = patient.status === 'stable' ? 'Estable' :
-                         patient.status === 'in-surgery' ? 'En cirugía' :
-                         patient.status === 'critical' ? 'Crítico' :
-                         patient.status === 'discharged' ? 'Dado de alta' : 'Observación';
-      
+        patient.status === 'in-surgery' ? 'En cirugía' :
+          patient.status === 'critical' ? 'Crítico' :
+            patient.status === 'discharged' ? 'Dado de alta' : 'Observación';
+
       card.innerHTML = `
         <div class="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-primary-container flex items-center justify-center">
           <span class="material-symbols-outlined text-3xl text-on-primary-container">${speciesIcon}</span>
@@ -66,7 +77,7 @@ export class PatientsView {
           <span class="material-symbols-outlined text-outline">chevron_right</span>
         </div>
       `;
-      
+
       card.addEventListener('click', () => onPatientClick(patient.id));
       this.patientsList?.appendChild(card);
     }
@@ -85,5 +96,75 @@ export class PatientsView {
     const div = document.createElement('div');
     div.textContent = str;
     return div.innerHTML;
+  }
+  showModal(): void {
+    if (this.modal) {
+      this.modal.classList.remove('hidden');
+    }
+  }
+
+  hideModal(): void {
+    if (this.modal) {
+      this.modal.classList.add('hidden');
+    }
+  }
+
+  onAddPatientSubmit(callback: (data: any) => void): void {
+    this.form?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = (document.getElementById('patient-name') as HTMLInputElement)?.value || '';
+      const species = (document.getElementById('patient-species') as HTMLSelectElement)?.value || 'canine';
+      const breed = (document.getElementById('patient-breed') as HTMLInputElement)?.value || '';
+      const ageMonths = parseFloat((document.getElementById('patient-age') as HTMLInputElement)?.value || '0');
+      const weight = parseFloat((document.getElementById('patient-weight') as HTMLInputElement)?.value || '0');
+      const owner = (document.getElementById('patient-owner') as HTMLInputElement)?.value || '';
+      callback({ name, species, breed, ageMonths, weight, owner });
+      this.hideModal();
+      this.clearForm();
+    });
+  }
+
+  clearForm(): void {
+    (document.getElementById('patient-name') as HTMLInputElement).value = '';
+    (document.getElementById('patient-breed') as HTMLInputElement).value = '';
+    (document.getElementById('patient-weight') as HTMLInputElement).value = '';
+    (document.getElementById('patient-owner') as HTMLInputElement).value = '';
+  }
+  onAddButtonClick(callback: () => void): void {
+    const addBtn = document.getElementById('add-patient-btn');
+    addBtn?.addEventListener('click', callback);
+  }
+  showEditModal(patient: any): void {
+    if (!this.editModal) return;
+    // Precargar datos
+    (document.getElementById('edit-patient-id') as HTMLInputElement).value = patient.id;
+    (document.getElementById('edit-patient-name') as HTMLInputElement).value = patient.name;
+    (document.getElementById('edit-patient-species') as HTMLSelectElement).value = patient.species;
+    (document.getElementById('edit-patient-breed') as HTMLInputElement).value = patient.breed;
+    (document.getElementById('edit-patient-age') as HTMLInputElement).value = patient.ageMonths?.toString() || '0';
+    (document.getElementById('edit-patient-weight') as HTMLInputElement).value = patient.weightKg?.toString() || '0';
+    (document.getElementById('edit-patient-owner') as HTMLInputElement).value = patient.ownerName || '';
+    (document.getElementById('edit-patient-status') as HTMLSelectElement).value = patient.status || 'stable';
+    this.editModal.classList.remove('hidden');
+  }
+
+  hideEditModal(): void {
+    if (this.editModal) this.editModal.classList.add('hidden');
+  }
+
+  onEditPatientSubmit(callback: (data: any) => void): void {
+    this.editForm?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const id = (document.getElementById('edit-patient-id') as HTMLInputElement).value;
+      const name = (document.getElementById('edit-patient-name') as HTMLInputElement).value;
+      const species = (document.getElementById('edit-patient-species') as HTMLSelectElement).value;
+      const breed = (document.getElementById('edit-patient-breed') as HTMLInputElement).value;
+      const ageMonths = parseFloat((document.getElementById('edit-patient-age') as HTMLInputElement).value || '0');
+      const weight = parseFloat((document.getElementById('edit-patient-weight') as HTMLInputElement).value || '0');
+      const owner = (document.getElementById('edit-patient-owner') as HTMLInputElement).value;
+      const status = (document.getElementById('edit-patient-status') as HTMLSelectElement).value;
+      callback({ id, name, species, breed, ageMonths, weight, owner, status });
+      this.hideEditModal();
+    });
   }
 }

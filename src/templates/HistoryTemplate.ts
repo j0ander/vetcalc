@@ -70,6 +70,28 @@ export const HistoryTemplate = `
 
 </main>
 
+
+      <!-- ===== MODAL DE DETALLE DE HISTORIAL (sin JSON) ===== -->
+<div id="history-detail-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm hidden animate-fade-in-up">
+  <div class="bg-white/90 backdrop-blur-sm rounded-2xl p-6 max-w-lg w-full mx-4 shadow-2xl border border-outline-variant max-h-[90vh] overflow-y-auto">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="font-headline-md text-headline-md text-on-surface">Detalle del Cálculo</h3>
+      <button id="close-history-detail-btn" class="p-2 rounded-full hover:bg-surface-container-high transition-colors">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <div id="detail-content" class="space-y-3">
+      <!-- Todo se inyecta dinámicamente desde el controlador -->
+    </div>
+
+    <button id="delete-history-btn" class="mt-4 w-full bg-error text-white h-touch-target-min rounded-xl font-label-md shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+      <span class="material-symbols-outlined">delete</span>
+      Eliminar registro
+    </button>
+  </div>
+</div>
+
 <!-- ===== BOTÓN FLOTANTE DE BÚSQUEDA ===== -->
 <button class="fixed bottom-24 right-6 h-14 w-14 rounded-full bg-primary text-white shadow-lg hover:shadow-xl active:scale-90 transition-all duration-300 z-40 flex items-center justify-center hover:-translate-y-1" id="search-fab">
   <span class="material-symbols-outlined text-[28px]">search</span>

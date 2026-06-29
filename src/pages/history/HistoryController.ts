@@ -1,61 +1,56 @@
 import { HistoryView, HistoryRecord } from './HistoryView';
 import { router, type Destroyable } from '@/services/RouterService';
-import { mockDataService } from '@/services/MockDataService';
+import { BaseController } from '@/controllers/BaseController';
+import { db, type CalculationRecord } from '@/database/VetCalcDB';
 import type { AppRoute } from '@/types';
 
-export class HistoryController implements Destroyable {
+export class HistoryController extends BaseController implements Destroyable {
   private view: HistoryView;
-  private allRecords: HistoryRecord[] = [];
+  private allRecords: CalculationRecord[] = [];
   private currentFilter: string = 'all';
 
   constructor() {
+    super();
     this.view = new HistoryView();
   }
 
   async init(): Promise<void> {
     this.view.render();
-    this.loadMockData();
+    this.setupGlobalNavigation();
+    this.initPremiumBadge();
+
+    try {
+      await this.loadHistory();
+    } catch (error) {
+      console.error('[HistoryController] Error cargando historial:', error);
+    }
+
     this.setupEventListeners();
+    this.setupModalEvents();
+
+    // Callback para clic en un ítem
+    this.view.onItemClick((id) => {
+      this.showDetail(id);
+    });
+
     this.applyFilter();
   }
 
-  private loadMockData(): void {
-    const mockHistory = mockDataService.getRecentHistory(10);
-    this.allRecords = mockHistory.map(record => ({
-      id: record.id,
-      type: record.type,
-      title: this.getTitleForType(record.type),
-      patientName: record.patientName || 'Desconocido',
-      species: record.patientSpecies || 'N/A',
-      weightKg: record.patientWeightKg || 0,
-      timestamp: record.createdAt,
-      summary: record.summary,
-      detail: JSON.stringify(record.result),
-      isPremium: record.type === 'anesthesia'
-    }));
+  private async loadHistory(): Promise<void> {
+    this.allRecords = await db.calculationHistory.orderBy('createdAt').reverse().toArray();
   }
 
   private getTitleForType(type: string): string {
-    switch (type) {
-      case 'dosage': return 'Cálculo de Dosis';
-      case 'fluidotherapy': return 'Fluidoterapia';
-      case 'anesthesia': return 'Protocolo de Anestesia';
-      default: return 'Cálculo';
-    }
+    const titles: Record<string, string> = {
+      dosage: 'Cálculo de Dosis',
+      fluidotherapy: 'Fluidoterapia',
+      anesthesia: 'Protocolo de Anestesia',
+      converter: 'Conversión'
+    };
+    return titles[type] || 'Cálculo';
   }
 
   private setupEventListeners(): void {
-    // Navegación general
-    document.querySelectorAll('[data-route]').forEach(el => {
-      el.addEventListener('click', async (e) => {
-        e.preventDefault();
-        const route = el.getAttribute('data-route') as AppRoute;
-        if (route) {
-          await router.navigate(route);
-        }
-      });
-    });
-
     // Filtros
     const filterBtns = this.view.getFilterButtons();
     filterBtns?.forEach(btn => {
@@ -67,18 +62,52 @@ export class HistoryController implements Destroyable {
       });
     });
 
-    // Botón cargar más (simulación)
     const loadMore = this.view.getLoadMoreButton();
     loadMore?.addEventListener('click', () => {
       console.log('Cargar más registros - por implementar');
-      // En el futuro se podría paginar
     });
 
-    // Búsqueda (FAB)
     const searchFab = this.view.getSearchFab();
     searchFab?.addEventListener('click', () => {
       console.log('Búsqueda - por implementar');
     });
+  }
+
+  // ===== CONFIGURAR MODAL =====
+  private setupModalEvents(): void {
+    // Cerrar con la X
+    this.view.onCloseDetail(() => {
+      this.view.hideDetail();
+    });
+
+    // Cerrar al hacer clic fuera del modal
+    const modal = document.getElementById('history-detail-modal');
+    modal?.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        this.view.hideDetail();
+      }
+    });
+
+    // Eliminar registro
+    this.view.onDeleteDetail(async (id: number) => {
+      if (confirm('¿Estás seguro de que quieres eliminar este registro?')) {
+        await db.calculationHistory.delete(id);
+        await this.loadHistory();
+        this.applyFilter();
+        this.view.hideDetail();
+      }
+    });
+  }
+
+  // ===== MOSTRAR DETALLE EN MODAL =====
+  private showDetail(id: string): void {
+    const record = this.allRecords.find(r => r.id?.toString() === id);
+    if (!record) {
+      alert('Registro no encontrado');
+      return;
+    }
+    // Llamar al método de la vista que muestra el modal
+    this.view.showDetail(record);
   }
 
   private applyFilter(): void {
@@ -86,10 +115,25 @@ export class HistoryController implements Destroyable {
     if (this.currentFilter !== 'all') {
       filtered = filtered.filter(r => r.type === this.currentFilter);
     }
-    this.view.renderHistoryList(filtered, this.currentFilter);
+
+    const historyRecords: HistoryRecord[] = filtered.map(record => ({
+      id: record.id!.toString(),
+      type: record.type,
+      title: this.getTitleForType(record.type),
+      patientName: record.patientName || 'Desconocido',
+      species: record.patientSpecies || 'N/A',
+      weightKg: record.patientWeightKg || 0,
+      timestamp: record.createdAt,
+      summary: record.summary || 'Sin resumen',
+      detail: JSON.stringify(record.result, null, 2),
+      isPremium: record.type === 'anesthesia'
+    }));
+
+    this.view.renderHistoryList(historyRecords, this.currentFilter);
   }
 
   destroy(): void {
+    this.destroyPremiumBadge();
     console.log('[HistoryController] Destroyed');
   }
 }

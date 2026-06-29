@@ -1,11 +1,12 @@
-import { LibraryView, Appointment } from './LibraryView';
+import { LibraryView, Appointment as ViewAppointment } from './LibraryView';
 import { router, type Destroyable } from '@/services/RouterService';
 import { BaseController } from '@/controllers/BaseController';
+import { db, type Appointment as DBAppointment } from '@/database/VetCalcDB';
 import type { AppRoute } from '@/types';
 
 export class LibraryController extends BaseController implements Destroyable {
   private view: LibraryView;
-  private appointments: Appointment[] = [];
+  private appointments: DBAppointment[] = [];
   private currentFilter: string = 'all';
 
   constructor() {
@@ -18,8 +19,8 @@ export class LibraryController extends BaseController implements Destroyable {
     this.setupGlobalNavigation();
     this.initPremiumBadge();
 
-    // Cargar citas de ejemplo
-    this.loadMockAppointments();
+    // Cargar citas desde IndexedDB
+    await this.loadAppointments();
 
     // Configurar fecha por defecto en el formulario
     this.view.setDefaultDate();
@@ -31,66 +32,47 @@ export class LibraryController extends BaseController implements Destroyable {
     this.applyFilter();
   }
 
-  private loadMockAppointments(): void {
-    const today = new Date().toISOString().split('T')[0];
-    const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
-    const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+  private async loadAppointments(): Promise<void> {
+    this.appointments = await db.appointments.toArray();
+  }
 
-    this.appointments = [
-      {
-        id: '1',
-        petName: 'Firulais',
-        date: today,
-        time: '10:30',
-        description: 'Vacunación antirrábica',
-        createdAt: new Date()
-      },
-      {
-        id: '2',
-        petName: 'Michi',
-        date: tomorrow,
-        time: '15:00',
-        description: 'Consulta general',
-        createdAt: new Date()
-      },
-      {
-        id: '3',
-        petName: 'Rex',
-        date: yesterday,
-        time: '09:00',
-        description: 'Desparasitación',
-        createdAt: new Date()
-      }
-    ];
+  private async addAppointment(data: { petName: string; date: string; time: string; description: string }): Promise<void> {
+    const newAppointment: Omit<DBAppointment, 'id'> = {
+      petName: data.petName,
+      date: data.date,
+      time: data.time,
+      description: data.description || 'Sin descripción',
+      createdAt: new Date()
+    };
+    await db.appointments.add(newAppointment);
+    await this.loadAppointments(); // recargar lista
+  }
+
+  private async deleteAppointment(id: number): Promise<void> {
+    await db.appointments.delete(id);
+    await this.loadAppointments();
   }
 
   private setupEventListeners(): void {
     // Agregar cita
-    this.view.onAddAppointment(() => {
+    this.view.onAddAppointment(async () => {
       const data = this.view.getAppointmentData();
       if (!data.petName || !data.date || !data.time) {
         alert('Por favor completa los campos obligatorios (mascota, fecha y hora).');
         return;
       }
-
-      const newAppointment: Appointment = {
-        id: Date.now().toString(),
-        petName: data.petName,
-        date: data.date,
-        time: data.time,
-        description: data.description || 'Sin descripción',
-        createdAt: new Date()
-      };
-
-      this.appointments.push(newAppointment);
+      await this.addAppointment(data);
       this.view.clearForm();
       this.applyFilter();
     });
 
     // Eliminar cita (callback desde la vista)
-    this.view.onDeleteAppointment((id: string) => {
-      this.appointments = this.appointments.filter(app => app.id !== id);
-      this.applyFilter();
+    this.view.onDeleteAppointment(async (id: string) => {
+      const numId = parseInt(id, 10);
+      if (!isNaN(numId)) {
+        await this.deleteAppointment(numId);
+        this.applyFilter();
+      }
     });
 
     // Filtros
@@ -121,7 +103,17 @@ export class LibraryController extends BaseController implements Destroyable {
     // Ordenar por fecha (más reciente primero)
     filtered.sort((a, b) => a.date.localeCompare(b.date) || a.time.localeCompare(b.time));
 
-    this.view.renderAppointments(filtered, this.currentFilter);
+    // Convertir a tipo que espera la vista (con id como string)
+    const viewAppointments: ViewAppointment[] = filtered.map(app => ({
+      id: app.id!.toString(),
+      petName: app.petName,
+      date: app.date,
+      time: app.time,
+      description: app.description,
+      createdAt: app.createdAt
+    }));
+
+    this.view.renderAppointments(viewAppointments, this.currentFilter);
   }
 
   destroy(): void {

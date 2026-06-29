@@ -1,6 +1,8 @@
+// src/pages/fluidotherapy/FluidotherapyController.ts
 import { FluidotherapyView } from './FluidotherapyView';
 import { router, type Destroyable } from '@/services/RouterService';
 import { BaseController } from '@/controllers/BaseController';
+import { saveToHistory } from '@/services/HistoryService';
 import type { AppRoute } from '@/types';
 
 export class FluidotherapyController extends BaseController implements Destroyable {
@@ -43,10 +45,45 @@ export class FluidotherapyController extends BaseController implements Destroyab
       }
     });
 
-    this.view.onSave(() => {
-      alert('Protocolo guardado (simulación)');
+    // Botón Guardar -> guardar en historial
+    this.view.onSave(async () => {
+      const weight = this.view.getWeight();
+      const dehydration = this.view.getDehydrationPercent();
+      const maintenance = this.view.getMaintenance();
+      const losses = this.view.getLosses();
+
+      const deficit = weight * dehydration * 10;
+      const maintenanceTotal = weight * maintenance;
+      const total24h = deficit + maintenanceTotal + losses;
+      const hourly = total24h / 24;
+      const dropsPerMin = (hourly * this.currentDripFactor) / 60;
+
+      await saveToHistory({
+        type: 'fluidotherapy',
+        patientName: 'Paciente (sin nombre)',
+        patientWeightKg: weight,
+        patientSpecies: 'canino', // mock
+        inputs: {
+          weightKg: weight,
+          dehydrationPercent: dehydration,
+          maintenanceMlKgDay: maintenance,
+          lossesMlDay: losses,
+          dripFactor: this.currentDripFactor
+        },
+        result: {
+          deficitMl: deficit,
+          maintenanceMl: maintenanceTotal,
+          totalMl: total24h,
+          mlPerHour: hourly,
+          dropsPerMin: dropsPerMin
+        },
+        summary: `Fluidoterapia: ${total24h.toFixed(1)} mL total (${hourly.toFixed(1)} mL/h, ${Math.round(dropsPerMin)} gotas/min)`
+      });
+
+      alert('Protocolo guardado en el historial.');
       console.log('Fluidoterapia guardada');
     });
+
     this.view.onReport(() => {
       console.log('Generar reporte PDF');
       alert('Función de reporte en desarrollo');
@@ -65,10 +102,7 @@ export class FluidotherapyController extends BaseController implements Destroyab
     const hourly = total24h / 24;
     const dropsPerMin = (hourly * this.currentDripFactor) / 60;
 
-    // Actualizar resultados principales
     this.view.updateResults(total24h, hourly, dropsPerMin);
-
-    // Actualizar panel de detalles expandible
     this.view.updateDetailPanel(deficit, maintenanceTotal, losses, this.currentDripFactor);
   }
 
