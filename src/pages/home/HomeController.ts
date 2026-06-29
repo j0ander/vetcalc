@@ -47,10 +47,10 @@ export class HomeController extends BaseController implements Destroyable {
     this.initPremiumBadge();
     
     // ✅ Actualizar saludo con el nombre del usuario
+    this.setupElements();
     this.updateGreeting();
 
     this.setupSpecificListeners();
-    this.setupElements();
     this.renderRecentPatients();
     this.renderRecentHistory();
     this.renderTipOfTheDay();
